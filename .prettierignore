@@ -1,0 +1,14 @@
+node_modules
+**/**/node_modules
+
+*.yaml
+*.lock
+*.log
+
+.gitignore
+.prettierignore
+.DS_Store
+
+**/**/.turbo
+**/**/dist
+**/**/.next
