@@ -11,7 +11,9 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "web": "pnpm --filter @mr/web",
+    "api": "pnpm --filter @mr/api"
   },
   "devDependencies": {
     "@mr/eslint-config-custom": "workspace:*",
