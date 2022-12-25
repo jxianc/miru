@@ -27,7 +27,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('test')
   authTest(@Req() req) {
-    console.log('req user, ', req.user)
     return 'hello world'
   }
 }

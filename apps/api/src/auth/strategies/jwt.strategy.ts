@@ -15,10 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(verifiedPayload: TokenPayload) {
-    console.log('payload', verifiedPayload)
     // attach user in request
-    const user = await this.authService.getUserById(verifiedPayload.userId)
-    console.log(user)
-    return user
+    return await this.authService.getUserById(verifiedPayload.userId)
   }
 }

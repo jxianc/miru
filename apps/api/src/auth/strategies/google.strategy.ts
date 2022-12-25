@@ -20,7 +20,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     profile: Profile,
     // _done: VerifyCallback,
   ): OAuthUser {
-    console.log('profile: ', profile)
     const { displayName, emails, provider, photos, id } = profile
     return {
       id,

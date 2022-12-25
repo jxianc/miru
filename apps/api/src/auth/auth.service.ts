@@ -70,7 +70,6 @@ export class AuthService {
         },
       })
       const accessToken = this.signIn(updatedUser, res)
-      console.log('access token: ', accessToken)
       return {
         success: true,
         accessToken,
@@ -216,7 +215,6 @@ export class AuthService {
   }
 
   generateToken(tokenPayload: TokenPayload) {
-    console.log('token secret', process.env.ACCESS_TOKEN_SECRET)
     const accessToken = this.jwtService.sign(tokenPayload, {
       secret: process.env.ACCESS_TOKEN_SECRET,
       expiresIn: '15m',
