@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Provider {
@@ -18,6 +19,7 @@ model Provider {
   userId       String @unique
 
   @@unique([providerId, providerName])
+  @@index([userId])
 }
 
 model User {
@@ -48,20 +50,22 @@ model Event {
 }
 
 model UserParticipateEvent {
-  event     Event   @relation(fields: [eventId], references: [id])
+  event     Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId   String
-  user      User    @relation(fields: [userId], references: [id])
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   isArrived Boolean @default(false)
   feedback  String? @db.VarChar(500)
   rating    Int
 
   @@id([eventId, userId])
+  @@index([eventId])
+  @@index([userId])
 }
 
 model Announcement {
   id          Int
-  event       Event    @relation(fields: [eventId], references: [id])
+  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId     String
   title       String   @db.VarChar(100)
   description String   @db.VarChar(500)
@@ -69,4 +73,5 @@ model Announcement {
   createdAt   DateTime @default(now())
 
   @@id([id, eventId])
+  @@index([eventId])
 }
