@@ -20,6 +20,7 @@ model Provider {
 
   @@unique([providerId, providerName])
   @@index([userId])
+  @@map("provider")
 }
 
 model User {
@@ -35,7 +36,7 @@ model User {
   eventOrganized    Event[]
   eventParticapated UserParticipateEvent[]
 
-  @@map("users")
+  @@map("user")
 }
 
 model Event {
@@ -47,6 +48,8 @@ model Event {
   announcements Announcement[]
   organizers    User[]
   participants  UserParticipateEvent[]
+
+  @@map("event")
 }
 
 model UserParticipateEvent {
@@ -61,6 +64,7 @@ model UserParticipateEvent {
   @@id([eventId, userId])
   @@index([eventId])
   @@index([userId])
+  @@map("user_participate_event")
 }
 
 model Announcement {
@@ -74,4 +78,5 @@ model Announcement {
 
   @@id([id, eventId])
   @@index([eventId])
+  @@map("announcement")
 }
