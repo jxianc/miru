@@ -14,9 +14,9 @@ datasource db {
 model Provider {
   id           String @id @default(cuid())
   providerId   String
-  providerName String
+  providerName String @map("provider_name")
   user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String @unique
+  userId       String @unique @map("user_id")
 
   @@unique([providerId, providerName])
   @@index([userId])
@@ -24,39 +24,44 @@ model Provider {
 }
 
 model User {
-  id                String                 @id @default(uuid())
-  name              String?
-  email             String?                @unique
-  image             String?
-  provider          Provider?
-  createdAt         DateTime               @default(now())
-  updatedAt         DateTime               @updatedAt()
-  refreshToken      String?
-  eventOrganized    Event[]
-  eventParticapated UserParticipateEvent[]
+  id               String                 @id @default(uuid())
+  name             String?
+  email            String?                @unique
+  image            String?
+  provider         Provider?
+  createdAt        DateTime               @default(now()) @map("created_at")
+  updatedAt        DateTime               @updatedAt() @map("updated_at")
+  refreshToken     String?                @map("refresh_token")
+  eventOrganized   Event[]
+  eventParticapted UserParticipateEvent[]
 
   @@map("user")
 }
 
 model Event {
-  id            String                 @id @default(uuid())
-  title         String                 @db.VarChar(100)
-  description   String                 @db.VarChar(500)
-  image         String?
-  date          DateTime
-  announcements Announcement[]
-  organizers    User[]
-  participants  UserParticipateEvent[]
+  id                String                 @id @default(uuid())
+  title             String                 @db.VarChar(100)
+  description       String                 @db.VarChar(500)
+  image             String?
+  location          String
+  maximumAttendance Int?
+  startDate         DateTime               @map("start_date")
+  endDate           DateTime?              @map("end_date")
+  createdAt         DateTime               @default(now()) @map("created_at")
+  updatedAt         DateTime               @updatedAt() @map("updated_at")
+  announcements     Announcement[]
+  organizers        User[]
+  participants      UserParticipateEvent[]
 
   @@map("event")
 }
 
 model UserParticipateEvent {
   event     Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId   String
+  eventId   String  @map("event_id")
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  isArrived Boolean @default(false)
+  userId    String  @map("user_id")
+  isArrived Boolean @default(false) @map("is_arrived")
   feedback  String? @db.VarChar(500)
   rating    Int
 
@@ -69,11 +74,12 @@ model UserParticipateEvent {
 model Announcement {
   id          Int
   event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId     String
+  eventId     String   @map("event_id")
   title       String   @db.VarChar(100)
   description String   @db.VarChar(500)
   type        String
-  createdAt   DateTime @default(now())
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt() @map("updated_at")
 
   @@id([id, eventId])
   @@index([eventId])
