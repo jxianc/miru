@@ -31,19 +31,21 @@ type Event {
 }
 
 type Mutation {
+  addOrganizers(eventId: String!, organizerIds: [String!]!): Event!
   createEvent(createEventInput: CreateEventInput!): Event!
   removeEvent(eventId: String!): Event!
-  updateEvent(updateEventInput: UpdateEventInput!): Event!
+  updateEvent(eventId: String!, updateEventInput: UpdateEventInput!): Event!
 }
 
 type Query {
+  getEvent(eventId: String!): Event!
+  getEvents: [Event!]!
   hello: String!
 }
 
 input UpdateEventInput {
   description: String
   endDate: DateTime
-  id: String!
   image: String
   location: String
   maximumAttendance: Int

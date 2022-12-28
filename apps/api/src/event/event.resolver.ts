@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common'
-import { Args, Context, Mutation, Resolver } from '@nestjs/graphql'
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { JwtGqlAuthGuard } from '../auth/guards/jwt.guard'
 import { CreateEventInput } from './dto/create-event.input'
 import { UpdateEventInput } from './dto/update-event.input'
@@ -12,8 +12,17 @@ export class EventResolver {
   constructor(private readonly eventService: EventService) {}
 
   // find events by event id
+  @Query(() => Event)
+  getEvent(@Args({ name: 'eventId' }) eventId: string) {
+    return this.eventService.findEventByEventId(eventId)
+  }
 
   // find all events by organizer
+  @UseGuards(JwtGqlAuthGuard)
+  @Query(() => [Event])
+  getEvents(@Context() ctx: any) {
+    return this.eventService.findEventsByOrganizerId(ctx.user.id)
+  }
 
   @UseGuards(JwtGqlAuthGuard)
   @Mutation(() => Event)
@@ -32,8 +41,9 @@ export class EventResolver {
   @Mutation(() => Event)
   updateEvent(
     @Args({ name: 'updateEventInput' }) updateEventInput: UpdateEventInput,
+    @Args({ name: 'eventId' }) eventId: string,
   ) {
-    return this.eventService.update(updateEventInput)
+    return this.eventService.update(updateEventInput, eventId)
   }
 
   // remove event
@@ -44,4 +54,13 @@ export class EventResolver {
   }
 
   // add organizer into event
+  @UseGuards(JwtGqlAuthGuard, OrganizerGuard)
+  @Mutation(() => Event)
+  addOrganizers(
+    @Args({ name: 'organizerIds', type: () => [String] })
+    organizerIds: [string],
+    @Args({ name: 'eventId' }) eventId: string,
+  ) {
+    return this.eventService.connectOrganizers(organizerIds, eventId)
+  }
 }
