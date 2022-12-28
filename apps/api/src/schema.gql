@@ -2,6 +2,51 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateEventInput {
+  description: String!
+  endDate: DateTime
+  image: String
+  location: String!
+  maximumAttendance: Int
+  startDate: DateTime!
+  title: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Event {
+  createdAt: DateTime!
+  description: String!
+  endDate: DateTime
+  id: String!
+  image: String
+  location: String!
+  maximumAttendance: Int
+  startDate: DateTime!
+  title: String!
+  updatedAt: DateTime!
+}
+
+type Mutation {
+  createEvent(createEventInput: CreateEventInput!): Event!
+  removeEvent(eventId: String!): Event!
+  updateEvent(updateEventInput: UpdateEventInput!): Event!
+}
+
 type Query {
   hello: String!
+}
+
+input UpdateEventInput {
+  description: String
+  endDate: DateTime
+  id: String!
+  image: String
+  location: String
+  maximumAttendance: Int
+  startDate: DateTime
+  title: String
 }

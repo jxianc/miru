@@ -7,6 +7,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { join } from 'path'
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core'
 import { AppResolver } from './app.resolver'
+import { EventModule } from './event/event.module'
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AppResolver } from './app.resolver'
       context: ({ req, res }) => ({ req, res }), // attach request and response to graphql context
     }),
     AuthModule,
+    EventModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
