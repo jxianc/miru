@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type BaseResponse {
+  errMsg: String
+  success: Boolean!
+}
+
 input CreateEventInput {
   description: String!
   endDate: DateTime
@@ -10,6 +15,12 @@ input CreateEventInput {
   maximumAttendance: Int
   startDate: DateTime!
   title: String!
+}
+
+type CreateEventResponse {
+  errMsg: String
+  event: Event!
+  success: Boolean!
 }
 
 """
@@ -31,10 +42,10 @@ type Event {
 }
 
 type Mutation {
-  addOrganizers(eventId: String!, organizerIds: [String!]!): Event!
-  createEvent(createEventInput: CreateEventInput!): Event!
-  removeEvent(eventId: String!): Event!
-  updateEvent(eventId: String!, updateEventInput: UpdateEventInput!): Event!
+  addOrganizers(eventId: String!, organizerIds: [String!]!): UpdateEventResponse!
+  createEvent(createEventInput: CreateEventInput!): CreateEventResponse!
+  removeEvent(eventId: String!): BaseResponse!
+  updateEvent(eventId: String!, updateEventInput: UpdateEventInput!): UpdateEventResponse!
 }
 
 type Query {
@@ -51,4 +62,10 @@ input UpdateEventInput {
   maximumAttendance: Int
   startDate: DateTime
   title: String
+}
+
+type UpdateEventResponse {
+  errMsg: String
+  event: Event!
+  success: Boolean!
 }
