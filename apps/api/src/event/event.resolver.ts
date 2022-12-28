@@ -1,9 +1,11 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql'
-import { EventService } from './event.service'
-import { Event } from './entities/event.entity'
+import { UseGuards } from '@nestjs/common'
+import { Args, Context, Mutation, Resolver } from '@nestjs/graphql'
+import { JwtGqlAuthGuard } from '../auth/guards/jwt.guard'
 import { CreateEventInput } from './dto/create-event.input'
 import { UpdateEventInput } from './dto/update-event.input'
-import { UseGuards } from '@nestjs/common'
+import { Event } from './entities/event.entity'
+import { EventService } from './event.service'
+import { OrganizerGuard } from './guards/organizer.guard'
 
 @Resolver(() => Event)
 export class EventResolver {
@@ -11,16 +13,22 @@ export class EventResolver {
 
   // find events by event id
 
-  // find all events by organizers
+  // find all events by organizer
 
+  @UseGuards(JwtGqlAuthGuard)
   @Mutation(() => Event)
   createEvent(
     @Args({ name: 'createEventInput' }) createEventInput: CreateEventInput,
+    @Context() ctx: any,
   ) {
-    return this.eventService.create(createEventInput, [''])
+    // TODO add organizers parameter to add mulitple organizers when creating event
+    return this.eventService.create(createEventInput, [
+      ctx.req.userId as string,
+    ])
   }
 
   // update event
+  @UseGuards(JwtGqlAuthGuard, OrganizerGuard)
   @Mutation(() => Event)
   updateEvent(
     @Args({ name: 'updateEventInput' }) updateEventInput: UpdateEventInput,
@@ -29,6 +37,7 @@ export class EventResolver {
   }
 
   // remove event
+  @UseGuards(JwtGqlAuthGuard, OrganizerGuard)
   @Mutation(() => Event)
   removeEvent(@Args({ name: 'eventId' }) eventId: string) {
     return this.eventService.remove(eventId)
