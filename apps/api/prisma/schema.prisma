@@ -58,32 +58,61 @@ model Event {
 }
 
 model Form {
-  event      Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId    String      @unique @map("event_id")
-  formFields FormField[]
+  event    Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId  String    @map("event_id")
+  formKeys FormKey[]
 
+  @@id([eventId])
   @@index([eventId])
   @@map("form")
 }
 
-model FormField {
-  Form    Form   @relation(fields: [eventId], references: [eventId])
-  eventId String @unique
-  label   String
-  value   String
+model FormKey {
+  id        Int         @default(autoincrement())
+  form      Form        @relation(fields: [eventId], references: [eventId])
+  eventId   String      @map("event_id")
+  label     String
+  formField FormField[]
 
+  @@id([id, eventId])
   @@index([eventId])
+  @@map("form_key")
+}
+
+model UserForm {
+  userParticipateEvent UserParticipateEvent @relation(fields: [eventId, userId], references: [eventId, userId])
+  eventId              String               @map("event_id")
+  userId               String               @map("user_id")
+  formFields           FormField[]
+
+  @@id([eventId, userId])
+  @@index([eventId, userId])
+  @@map("user_form")
+}
+
+model FormField {
+  formKey   FormKey  @relation(fields: [formKeyId, eventId], references: [id, eventId])
+  userForm  UserForm @relation(fields: [eventId, userId], references: [eventId, userId])
+  formKeyId Int      @map("form_key_id")
+  eventId   String   @map("event_id")
+  userId    String   @map("user_id")
+  value     String
+
+  @@id([formKeyId, eventId, userId])
+  @@index([formKeyId, eventId])
+  @@index([eventId, userId])
   @@map("form_field")
 }
 
 model UserParticipateEvent {
-  event     Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId   String  @map("event_id")
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String  @map("user_id")
-  isArrived Boolean @default(false) @map("is_arrived")
-  feedback  String? @db.VarChar(500)
+  event     Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId   String    @map("event_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String    @map("user_id")
+  isArrived Boolean   @default(false) @map("is_arrived")
+  feedback  String?   @db.VarChar(500)
   rating    Int
+  userForm  UserForm?
 
   @@id([eventId, userId])
   @@index([eventId])
