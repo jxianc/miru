@@ -52,8 +52,28 @@ model Event {
   announcements     Announcement[]
   organizers        User[]
   participants      UserParticipateEvent[]
+  form              Form?
 
   @@map("event")
+}
+
+model Form {
+  event      Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId    String      @unique @map("event_id")
+  formFields FormField[]
+
+  @@index([eventId])
+  @@map("form")
+}
+
+model FormField {
+  Form    Form   @relation(fields: [eventId], references: [eventId])
+  eventId String @unique
+  label   String
+  value   String
+
+  @@index([eventId])
+  @@map("form_field")
 }
 
 model UserParticipateEvent {
