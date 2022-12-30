@@ -15,6 +15,7 @@ export class EventResolver {
   constructor(private readonly eventService: EventService) {}
 
   // find events by event id
+  // TODO fix this so that only organizer can access, and add all the fields needed
   @Query(() => Event)
   getEvent(@Args({ name: 'eventId' }) eventId: string) {
     return this.eventService.findEventByEventId(eventId)
@@ -23,10 +24,14 @@ export class EventResolver {
   // find all events by organizer
   @UseGuards(JwtGqlAuthGuard)
   @Query(() => [Event])
-  getEvents(@Context() ctx: any) {
+  getEventsOrganized(@Context() ctx: any) {
     return this.eventService.findEventsByOrganizerId(ctx.user.id)
   }
 
+  // find all events by participant
+  // TODO getEventsParticipated
+
+  // create event
   @UseGuards(JwtGqlAuthGuard)
   @Mutation(() => CreateEventResponse)
   createEvent(
@@ -34,6 +39,7 @@ export class EventResolver {
     @Context() ctx: any,
   ) {
     // TODO add organizers parameter to add mulitple organizers when creating event
+    // TODO create form
     return this.eventService.create(createEventInput, [
       ctx.req.user.id as string,
     ])
