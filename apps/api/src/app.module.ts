@@ -9,6 +9,7 @@ import { join } from 'path'
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core'
 import { AppResolver } from './app.resolver'
 import { EventModule } from './event/event.module'
+import { FormModule } from './form/form.module'
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { EventModule } from './event/event.module'
     }),
     AuthModule,
     EventModule,
+    FormModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

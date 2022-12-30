@@ -15,8 +15,8 @@ model Provider {
   id           String @id @default(cuid())
   providerId   String
   providerName String @map("provider_name")
-  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String @unique @map("user_id")
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([providerId, providerName])
   @@index([userId])
@@ -28,10 +28,10 @@ model User {
   name             String?
   email            String?                @unique
   image            String?
-  provider         Provider?
   createdAt        DateTime               @default(now()) @map("created_at")
   updatedAt        DateTime               @updatedAt() @map("updated_at")
   refreshToken     String?                @map("refresh_token")
+  provider         Provider?
   eventOrganized   Event[]
   eventParticapted UserParticipateEvent[]
 
@@ -58,9 +58,11 @@ model Event {
 }
 
 model Form {
-  event    Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId  String    @map("event_id")
-  formKeys FormKey[]
+  eventId   String    @map("event_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt() @map("updated_at")
+  event     Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  formKeys  FormKey[]
 
   @@id([eventId])
   @@index([eventId])
@@ -69,9 +71,9 @@ model Form {
 
 model FormKey {
   id        Int         @default(autoincrement())
-  form      Form        @relation(fields: [eventId], references: [eventId])
   eventId   String      @map("event_id")
   label     String
+  form      Form        @relation(fields: [eventId], references: [eventId])
   formField FormField[]
 
   @@id([id, eventId])
@@ -80,9 +82,11 @@ model FormKey {
 }
 
 model UserForm {
-  userParticipateEvent UserParticipateEvent @relation(fields: [eventId, userId], references: [eventId, userId])
   eventId              String               @map("event_id")
   userId               String               @map("user_id")
+  createdAt            DateTime             @default(now()) @map("created_at")
+  updatedAt            DateTime             @updatedAt() @map("updated_at")
+  userParticipateEvent UserParticipateEvent @relation(fields: [eventId, userId], references: [eventId, userId])
   formFields           FormField[]
 
   @@id([eventId, userId])
@@ -91,12 +95,12 @@ model UserForm {
 }
 
 model FormField {
-  formKey   FormKey  @relation(fields: [formKeyId, eventId], references: [id, eventId])
-  userForm  UserForm @relation(fields: [eventId, userId], references: [eventId, userId])
   formKeyId Int      @map("form_key_id")
   eventId   String   @map("event_id")
   userId    String   @map("user_id")
   value     String
+  formKey   FormKey  @relation(fields: [formKeyId, eventId], references: [id, eventId])
+  userForm  UserForm @relation(fields: [eventId, userId], references: [eventId, userId])
 
   @@id([formKeyId, eventId, userId])
   @@index([formKeyId, eventId])
@@ -105,13 +109,13 @@ model FormField {
 }
 
 model UserParticipateEvent {
-  event     Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId   String    @map("event_id")
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String    @map("user_id")
   isArrived Boolean   @default(false) @map("is_arrived")
   feedback  String?   @db.VarChar(500)
   rating    Int
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event     Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
   userForm  UserForm?
 
   @@id([eventId, userId])
@@ -122,13 +126,13 @@ model UserParticipateEvent {
 
 model Announcement {
   id          Int
-  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId     String   @map("event_id")
   title       String   @db.VarChar(100)
   description String   @db.VarChar(500)
   type        String
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt() @map("updated_at")
+  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@id([id, eventId])
   @@index([eventId])

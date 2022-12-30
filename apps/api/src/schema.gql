@@ -32,6 +32,7 @@ type Event {
   createdAt: DateTime!
   description: String!
   endDate: DateTime
+  form: Form!
   id: String!
   image: String
   location: String!
@@ -39,6 +40,26 @@ type Event {
   startDate: DateTime!
   title: String!
   updatedAt: DateTime!
+}
+
+type Form {
+  createdAt: DateTime!
+  event: Event!
+  formKeys: [FormKey!]
+  updatedAt: DateTime!
+}
+
+type FormField {
+  formKey: FormKey!
+  userForm: UserForm!
+  value: String!
+}
+
+type FormKey {
+  form: Form!
+  formFields: [FormField!]
+  id: Float!
+  label: String!
 }
 
 type Mutation {
@@ -68,4 +89,19 @@ type UpdateEventResponse {
   errMsg: String
   event: Event!
   success: Boolean!
+}
+
+type UserForm {
+  createdAt: DateTime!
+  formFields: [FormField!]
+  updatedAt: DateTime!
+  userParticipateEvent: UserParticipateEvent!
+}
+
+type UserParticipateEvent {
+  event: Event!
+  feedback: String
+  isArrived: Boolean!
+  rating: Float!
+  userForm: UserForm!
 }
