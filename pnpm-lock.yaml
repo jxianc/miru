@@ -22,6 +22,7 @@ importers:
       '@nestjs/apollo': ^10.1.7
       '@nestjs/cli': ^8.2.8
       '@nestjs/common': ^8.4.7
+      '@nestjs/config': ^2.2.0
       '@nestjs/core': ^8.4.7
       '@nestjs/graphql': ^10.1.7
       '@nestjs/jwt': ^9.0.0
@@ -66,6 +67,7 @@ importers:
     dependencies:
       '@nestjs/apollo': 10.1.7_eegty7okh5ozv4gufipzioc7t4
       '@nestjs/common': 8.4.7_mnr6j2del53muneqly5h4y27ai
+      '@nestjs/config': 2.2.0_q6tehokzwy3z4akuawpn6kiwbe
       '@nestjs/core': 8.4.7_tdkocbskemo2uwka4xhsbznrba
       '@nestjs/graphql': 10.1.7_zbpafy2maqn7yog2ecngtpw6aa
       '@nestjs/jwt': 9.0.0_@nestjs+common@8.4.7
@@ -1299,6 +1301,22 @@ packages:
       uuid: 8.3.2
     transitivePeerDependencies:
       - debug
+
+  /@nestjs/config/2.2.0_q6tehokzwy3z4akuawpn6kiwbe:
+    resolution: {integrity: sha512-78Eg6oMbCy3D/YvqeiGBTOWei1Jwi3f2pSIZcZ1QxY67kYsJzTRTkwRT8Iv30DbK0sGKc1mcloDLD5UXgZAZtg==}
+    peerDependencies:
+      '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0
+      reflect-metadata: ^0.1.13
+      rxjs: ^6.0.0 || ^7.2.0
+    dependencies:
+      '@nestjs/common': 8.4.7_mnr6j2del53muneqly5h4y27ai
+      dotenv: 16.0.1
+      dotenv-expand: 8.0.3
+      lodash: 4.17.21
+      reflect-metadata: 0.1.13
+      rxjs: 7.8.0
+      uuid: 8.3.2
+    dev: false
 
   /@nestjs/core/8.4.7_tdkocbskemo2uwka4xhsbznrba:
     resolution: {integrity: sha512-XB9uexHqzr2xkPo6QSiQWJJttyYYLmvQ5My64cFvWFi7Wk2NIus0/xUNInwX3kmFWB6pF1ab5Y2ZBvWdPwGBhw==}
@@ -3408,6 +3426,16 @@ packages:
     dependencies:
       webidl-conversions: 5.0.0
     dev: true
+
+  /dotenv-expand/8.0.3:
+    resolution: {integrity: sha512-SErOMvge0ZUyWd5B0NXMQlDkN+8r+HhVUsxgOO7IoPDOdDRD2JjExpN6y3KnFR66jsJMwSn1pqIivhU5rcJiNg==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /dotenv/16.0.1:
+    resolution: {integrity: sha512-1K6hR6wtk2FviQ4kEiSjFiH5rpzEVi8WW0x96aztHVMhEspNpc4DVOUTEHtEva5VThQ8IaBX1Pe4gSzpVVUsKQ==}
+    engines: {node: '>=12'}
+    dev: false
 
   /eastasianwidth/0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
