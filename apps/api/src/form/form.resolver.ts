@@ -1,15 +1,69 @@
-import { Resolver } from '@nestjs/graphql'
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { EventService } from '../event/event.service'
+import { CreateFormKeyInput, UpdateFormKeyInput } from './dto/form-key.input'
+import { UpdateFormResponse } from './dto/update-form.response'
+import { Form as FormEntity } from './entities/form.entity'
 import { FormService } from './form.service'
 
 @Resolver()
 export class FormResolver {
-  constructor(private readonly formService: FormService) {}
+  constructor(
+    private readonly formService: FormService,
+    private readonly eventService: EventService,
+  ) {}
 
   // update/customize the form
-  // TODO updateForm
+  @Mutation(() => UpdateFormResponse)
+  async updateForm(
+    @Args({ name: 'eventId' }) eventId: string,
+    @Args({ name: 'createFormKeyInputs', type: () => CreateFormKeyInput })
+    createFormKeyInputs: CreateFormKeyInput[],
+    @Args({ name: 'updateFormKeyInputs', type: () => UpdateFormKeyInput })
+    updateFormKeyInputs: UpdateFormKeyInput[],
+    @Args({ name: 'removeFormKeyInputs', type: () => [Int] })
+    removeFormKeyInputs: number[],
+  ): Promise<UpdateFormResponse> {
+    const { success: createSuccess, errMsg: createErrMsg } =
+      await this.formService.createFormKeys(eventId, createFormKeyInputs)
+    if (!createSuccess) {
+      return {
+        success: false,
+        errMsg: createErrMsg,
+      }
+    }
+
+    const { success: updateSuccess, errMsg: updateErrMsg } =
+      await this.formService.updateFormKeys(eventId, updateFormKeyInputs)
+    if (!updateSuccess) {
+      return {
+        success: false,
+        errMsg: updateErrMsg,
+      }
+    }
+
+    const { success: removeSuccess, errMsg: removeErrMsg } =
+      await this.formService.removeFormKeys(eventId, removeFormKeyInputs)
+    if (!removeSuccess) {
+      return {
+        success: false,
+        errMsg: removeErrMsg,
+      }
+    }
+
+    // all operations are excuted successfully, get the updated form
+    const updatedForm = await this.formService.findFormByEvent(eventId)
+    return {
+      success: true,
+      form: updatedForm!, // the form sure exists
+    }
+  }
 
   // get the form with event info
-  // TODO getForm
+  // TODO does this need to add guards?
+  @Query(() => FormEntity)
+  getForm(@Args({ name: 'eventId' }) eventId: string) {
+    return this.formService.findFormByEvent(eventId)
+  }
 
   // submit the form
   // TODO submit form

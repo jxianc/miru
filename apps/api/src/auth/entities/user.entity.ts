@@ -6,7 +6,7 @@ import { Event as EventEntity } from '../../event/entities/event.entity'
 @ObjectType()
 export class User extends BaseEntity {
   @Field()
-  id!: number
+  id!: string
 
   @Field(() => String, { nullable: true })
   name?: string

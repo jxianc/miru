@@ -8,7 +8,7 @@ import { UpdateEventInput } from './dto/update-event.input'
 import { UpdateEventResponse } from './dto/update-event.response'
 import { Event } from './entities/event.entity'
 import { EventService } from './event.service'
-import { OrganizerGuard } from './guards/organizer.guard'
+import { OrganizerGuard } from '../auth/guards/organizer.guard'
 
 @Resolver(() => Event)
 export class EventResolver {
@@ -39,7 +39,6 @@ export class EventResolver {
     @Context() ctx: any,
   ) {
     // TODO add organizers parameter to add mulitple organizers when creating event
-    // TODO create form
     return this.eventService.create(createEventInput, [
       ctx.req.user.id as string,
     ])

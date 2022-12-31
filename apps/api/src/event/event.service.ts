@@ -35,6 +35,23 @@ export class EventService {
           organizers: {
             connect: organizerIds.map((oid) => ({ id: oid })),
           },
+          form: {
+            create: {
+              formKeys: {
+                create: {
+                  label: 'Name',
+                },
+              },
+            },
+          },
+        },
+        include: {
+          organizers: true,
+          form: {
+            include: {
+              formKeys: true,
+            },
+          },
         },
       })
       return {

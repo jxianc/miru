@@ -29,6 +29,10 @@ type CreateEventResponse {
   success: Boolean!
 }
 
+input CreateFormKeyInput {
+  label: String!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -57,17 +61,17 @@ type Form {
   updatedAt: DateTime!
 }
 
-type FormField {
+type FormKey {
+  form: Form!
+  formFields: [FormValue!]
+  id: Float!
+  label: String!
+}
+
+type FormValue {
   formKey: FormKey!
   userForm: UserForm!
   value: String!
-}
-
-type FormKey {
-  form: Form!
-  formFields: [FormField!]
-  id: Float!
-  label: String!
 }
 
 type Mutation {
@@ -76,11 +80,13 @@ type Mutation {
   refreshToken: AuthResponse!
   removeEvent(eventId: String!): BaseResponse!
   updateEvent(eventId: String!, updateEventInput: UpdateEventInput!): UpdateEventResponse!
+  updateForm(createFormKeyInputs: CreateFormKeyInput!, eventId: String!, removeFormKeyInputs: [Int!]!, updateFormKeyInputs: UpdateFormKeyInput!): UpdateFormResponse!
 }
 
 type Query {
   getEvent(eventId: String!): Event!
   getEventsOrganized: [Event!]!
+  getForm(eventId: String!): Form!
   hello: String!
 }
 
@@ -100,12 +106,23 @@ type UpdateEventResponse {
   success: Boolean!
 }
 
+input UpdateFormKeyInput {
+  id: String!
+  label: String
+}
+
+type UpdateFormResponse {
+  errMsg: String
+  form: Form
+  success: Boolean!
+}
+
 type User {
   createdAt: DateTime!
   email: String
   eventOrganized: Event
   eventParticipated: Event
-  id: Float!
+  id: String!
   image: String
   name: String
   refreshToken: String
@@ -114,7 +131,7 @@ type User {
 
 type UserForm {
   createdAt: DateTime!
-  formFields: [FormField!]
+  formValues: [FormValue!]
   updatedAt: DateTime!
   userParticipateEvent: UserParticipateEvent!
 }
