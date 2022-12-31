@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AuthResponse {
+  accessToken: String
+  errMsg: String
+  success: Boolean!
+}
+
 type BaseResponse {
   errMsg: String
   success: Boolean!
@@ -65,6 +71,7 @@ type FormKey {
 type Mutation {
   addOrganizers(eventId: String!, organizerIds: [String!]!): UpdateEventResponse!
   createEvent(createEventInput: CreateEventInput!): CreateEventResponse!
+  refreshToken: AuthResponse!
   removeEvent(eventId: String!): BaseResponse!
   updateEvent(eventId: String!, updateEventInput: UpdateEventInput!): UpdateEventResponse!
 }
