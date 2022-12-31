@@ -74,7 +74,7 @@ model FormKey {
   eventId   String      @map("event_id")
   label     String
   form      Form        @relation(fields: [eventId], references: [eventId])
-  formField FormField[]
+  formValue FormValue[]
 
   @@id([id, eventId])
   @@index([eventId])
@@ -87,14 +87,14 @@ model UserForm {
   createdAt            DateTime             @default(now()) @map("created_at")
   updatedAt            DateTime             @updatedAt() @map("updated_at")
   userParticipateEvent UserParticipateEvent @relation(fields: [eventId, userId], references: [eventId, userId])
-  formFields           FormField[]
+  formValues           FormValue[]
 
   @@id([eventId, userId])
   @@index([eventId, userId])
   @@map("user_form")
 }
 
-model FormField {
+model FormValue {
   formKeyId Int      @map("form_key_id")
   eventId   String   @map("event_id")
   userId    String   @map("user_id")
@@ -105,7 +105,7 @@ model FormField {
   @@id([formKeyId, eventId, userId])
   @@index([formKeyId, eventId])
   @@index([eventId, userId])
-  @@map("form_field")
+  @@map("form_value")
 }
 
 model UserParticipateEvent {

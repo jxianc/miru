@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql'
-import { Form, FormField } from '@prisma/client'
-import { FormField as FormFieldEntity } from './form-field.entity'
+import { Form, FormValue } from '@prisma/client'
+import { FormValue as FormValueEntity } from './form-field.entity'
 import { Form as FormEntity } from './form.entity'
 
 @ObjectType()
@@ -14,6 +14,6 @@ export class FormKey {
   @Field(() => FormEntity)
   form!: Form
 
-  @Field(() => [FormFieldEntity], { nullable: true })
-  formFields?: FormField[]
+  @Field(() => [FormValueEntity], { nullable: true })
+  formFields?: FormValue[]
 }

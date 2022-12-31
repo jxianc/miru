@@ -4,7 +4,7 @@ import { FormKey as FormKeyEntity } from './form-key.entity'
 import { UserForm as UserFormEntity } from './user-form.entity'
 
 @ObjectType()
-export class FormField {
+export class FormValue {
   @Field()
   value!: string
 
