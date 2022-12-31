@@ -1,7 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql'
-import { Event, UserForm } from '@prisma/client'
+import { Event, User, UserForm } from '@prisma/client'
 import { UserForm as UserFormEntity } from '../../form/entities/user-form.entity'
 import { Event as EventEntity } from './event.entity'
+import { User as UserEntity } from '../../auth/entities/user.entity'
 
 @ObjectType()
 export class UserParticipateEvent {
@@ -20,5 +21,6 @@ export class UserParticipateEvent {
   @Field(() => UserFormEntity)
   userForm!: UserForm
 
-  // TODO user
+  @Field(() => UserEntity)
+  user!: User
 }

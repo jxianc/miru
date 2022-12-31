@@ -43,6 +43,8 @@ type Event {
   image: String
   location: String!
   maximumAttendance: Int
+  organizers: [User!]
+  participants: [UserParticipateEvent!]
   startDate: DateTime!
   title: String!
   updatedAt: DateTime!
@@ -98,6 +100,18 @@ type UpdateEventResponse {
   success: Boolean!
 }
 
+type User {
+  createdAt: DateTime!
+  email: String
+  eventOrganized: Event
+  eventParticipated: Event
+  id: Float!
+  image: String
+  name: String
+  refreshToken: String
+  updatedAt: DateTime!
+}
+
 type UserForm {
   createdAt: DateTime!
   formFields: [FormField!]
@@ -110,5 +124,6 @@ type UserParticipateEvent {
   feedback: String
   isArrived: Boolean!
   rating: Float!
+  user: User!
   userForm: UserForm!
 }

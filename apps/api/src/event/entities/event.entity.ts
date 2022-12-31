@@ -1,7 +1,9 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql'
 import { Form as FormEntity } from '../../form/entities/form.entity'
 import { BaseEntity } from '../../base/base.entity'
-import { Form } from '@prisma/client'
+import { Form, User, UserParticipateEvent } from '@prisma/client'
+import { User as UserEntity } from 'src/auth/entities/user.entity'
+import { UserParticipateEvent as UserParticipateEventEntity } from './user-participate-event.entity'
 
 @ObjectType()
 export class Event extends BaseEntity {
@@ -32,7 +34,11 @@ export class Event extends BaseEntity {
   @Field(() => FormEntity)
   form!: Form
 
-  // TODO organizers
-  // TODO participants
+  @Field(() => [UserEntity], { nullable: true })
+  organizers?: User[]
+
+  @Field(() => [UserParticipateEventEntity], { nullable: true })
+  participants?: UserParticipateEvent[]
+
   // TODO announcements
 }
