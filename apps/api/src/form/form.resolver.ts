@@ -1,16 +1,16 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql'
-import { EventService } from '../event/event.service'
+import { UseGuards } from '@nestjs/common'
+import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { JwtGqlAuthGuard } from '../auth/guards/jwt.guard'
+import { BaseResponse } from '../base/base.response'
 import { CreateFormKeyInput, UpdateFormKeyInput } from './dto/form-key.input'
+import { FormValueInput } from './dto/form-value.input'
 import { UpdateFormResponse } from './dto/update-form.response'
 import { Form as FormEntity } from './entities/form.entity'
 import { FormService } from './form.service'
 
 @Resolver()
 export class FormResolver {
-  constructor(
-    private readonly formService: FormService,
-    private readonly eventService: EventService,
-  ) {}
+  constructor(private readonly formService: FormService) {}
 
   // update/customize the form
   @Mutation(() => UpdateFormResponse)
@@ -61,10 +61,23 @@ export class FormResolver {
   // get the form with event info
   // TODO does this need to add guards?
   @Query(() => FormEntity)
-  getForm(@Args({ name: 'eventId' }) eventId: string) {
-    return this.formService.findFormByEvent(eventId)
+  async getForm(@Args({ name: 'eventId' }) eventId: string) {
+    return await this.formService.findFormByEvent(eventId)
   }
 
   // submit the form
-  // TODO submit form
+  @UseGuards(JwtGqlAuthGuard)
+  @Mutation(() => BaseResponse)
+  async signUpEvent(
+    @Args({ name: 'eventId' }) eventId: string,
+    @Args({ name: 'formValueInputs', type: () => FormValueInput })
+    formValueInputs: FormValueInput[],
+    @Context() ctx: any,
+  ) {
+    return await this.formService.signUpEvent(
+      ctx.req.user.id as string,
+      eventId,
+      formValueInputs,
+    )
+  }
 }

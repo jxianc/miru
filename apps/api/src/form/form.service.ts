@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { BaseResponse } from '../base/base.response'
 import { PrismaService } from '../prisma.service'
 import { CreateFormKeyInput, UpdateFormKeyInput } from './dto/form-key.input'
+import { FormValueInput } from './dto/form-value.input'
 
 @Injectable()
 export class FormService {
@@ -109,6 +110,57 @@ export class FormService {
         successCount === removeFormKeyInputs.length
           ? undefined
           : 'error occurred when removing form keys',
+    }
+  }
+
+  async signUpEvent(
+    userId: string,
+    eventId: string,
+    formValueInputs: FormValueInput[],
+  ): Promise<BaseResponse> {
+    try {
+      const userParticipateEvent =
+        await this.prisma.userParticipateEvent.create({
+          data: {
+            userId,
+            eventId,
+            userForm: {
+              create: {
+                formValues: {
+                  createMany: {
+                    data: formValueInputs,
+                  },
+                },
+              },
+            },
+          },
+          include: {
+            userForm: {
+              include: {
+                formValues: true,
+              },
+            },
+          },
+        })
+      if (
+        userParticipateEvent.userForm?.formValues.length ===
+        formValueInputs.length
+      ) {
+        return {
+          success: true,
+        }
+      } else {
+        return {
+          success: false,
+          errMsg: 'failed to sign up event',
+        }
+      }
+    } catch (err) {
+      console.log(err)
+      return {
+        success: false,
+        errMsg: 'failed to sign up event',
+      }
     }
   }
 }

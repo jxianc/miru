@@ -113,7 +113,7 @@ model UserParticipateEvent {
   userId    String    @map("user_id")
   isArrived Boolean   @default(false) @map("is_arrived")
   feedback  String?   @db.VarChar(500)
-  rating    Int
+  rating    Int?
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   event     Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
   userForm  UserForm?
