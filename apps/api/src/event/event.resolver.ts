@@ -15,7 +15,7 @@ export class EventResolver {
   constructor(private readonly eventService: EventService) {}
 
   // find events by event id
-  // TODO fix this so that only organizer can access, and add all the fields needed
+  @UseGuards(JwtGqlAuthGuard, OrganizerGuard)
   @Query(() => Event)
   getEvent(@Args({ name: 'eventId' }) eventId: string) {
     return this.eventService.findEventByEventId(eventId)

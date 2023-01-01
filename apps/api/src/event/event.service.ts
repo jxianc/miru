@@ -124,6 +124,20 @@ export class EventService {
       where: {
         id: eventId,
       },
+      include: {
+        announcements: true,
+        form: {
+          include: {
+            formKeys: true,
+          },
+        },
+        organizers: true,
+        participants: {
+          include: {
+            user: true,
+          },
+        },
+      },
     })
 
     if (!event) {
