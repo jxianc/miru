@@ -1,0 +1,207 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Announcement {
+  createdAt: DateTime!
+  description: String!
+  event: Event!
+  id: Float!
+  title: String!
+  type: String!
+  updatedAt: DateTime!
+}
+
+type AuthResponse {
+  accessToken: String
+  errMsg: String
+  success: Boolean!
+}
+
+type BaseResponse {
+  errMsg: String
+  success: Boolean!
+}
+
+input CreateAnnouncementInput {
+  description: String!
+  title: String!
+  type: String!
+}
+
+type CreateAnnouncementResponse {
+  announcement: Announcement
+  errMsg: String
+  success: Boolean!
+}
+
+input CreateEventInput {
+  description: String!
+  endDate: DateTime
+  image: String
+  location: String!
+  maximumAttendance: Int
+  startDate: DateTime!
+  title: String!
+}
+
+type CreateEventResponse {
+  errMsg: String
+  event: Event!
+  success: Boolean!
+}
+
+input CreateFormKeyInput {
+  label: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Event {
+  announcements: [Announcement!]
+  createdAt: DateTime!
+  description: String!
+  endDate: DateTime
+  form: Form!
+  id: String!
+  image: String
+  location: String!
+  maximumAttendance: Int
+  organizers: [User!]
+  participants: [UserParticipateEvent!]
+  startDate: DateTime!
+  title: String!
+  updatedAt: DateTime!
+}
+
+type Form {
+  createdAt: DateTime!
+  event: Event!
+  formKeys: [FormKey!]
+  updatedAt: DateTime!
+}
+
+type FormKey {
+  form: Form!
+  formFields: [FormValue!]
+  id: Float!
+  label: String!
+}
+
+type FormValue {
+  formKey: FormKey!
+  userForm: UserForm!
+  value: String!
+}
+
+input FormValueInput {
+  formKeyId: Float!
+  value: String!
+}
+
+type Liveboard {
+  annoucements: [Announcement!]
+  event: Event!
+  participants: [UserParticipateEvent!]
+}
+
+type LiveboardResponse {
+  errMsg: String
+  liveboard: Liveboard
+  success: Boolean!
+}
+
+type Mutation {
+  addOrganizers(eventId: String!, organizerIds: [String!]!): UpdateEventResponse!
+  attendEvent(eventId: String!): BaseResponse!
+  createAnnouncement(createAnnouncementInput: CreateAnnouncementInput!, eventId: String!): CreateAnnouncementResponse!
+  createEvent(createEventInput: CreateEventInput!): CreateEventResponse!
+  quitEvent(eventId: String!): BaseResponse!
+  refreshToken: AuthResponse!
+  removeAnnouncement(announcementId: Float!, eventId: String!): BaseResponse!
+  removeEvent(eventId: String!): BaseResponse!
+  signUpEvent(eventId: String!, formValueInputs: [FormValueInput!]!): BaseResponse!
+  updateAnnouncement(eventId: String!, updateAnnouncementInput: UpdateAnnouncementInput!): UpdateAnnouncementResponse!
+  updateEvent(eventId: String!, updateEventInput: UpdateEventInput!): UpdateEventResponse!
+  updateForm(createFormKeyInputs: [CreateFormKeyInput!], eventId: String!, removeFormKeyInputs: [Int!], updateFormKeyInputs: [UpdateFormKeyInput!]): UpdateFormResponse!
+}
+
+type Query {
+  getEvent(eventId: String!): Event!
+  getEventsOrganized: [Event!]!
+  getEventsParticipated: [Event!]!
+  getForm(eventId: String!): Form!
+  getLiveboard(eventId: String!): LiveboardResponse!
+  hello: String!
+}
+
+input UpdateAnnouncementInput {
+  description: String
+  id: Float!
+  title: String
+  type: String
+}
+
+type UpdateAnnouncementResponse {
+  announcement: Announcement
+  errMsg: String
+  success: Boolean!
+}
+
+input UpdateEventInput {
+  description: String
+  endDate: DateTime
+  image: String
+  location: String
+  maximumAttendance: Int
+  startDate: DateTime
+  title: String
+}
+
+type UpdateEventResponse {
+  errMsg: String
+  event: Event!
+  success: Boolean!
+}
+
+input UpdateFormKeyInput {
+  id: Float!
+  label: String
+}
+
+type UpdateFormResponse {
+  errMsg: String
+  form: Form
+  success: Boolean!
+}
+
+type User {
+  createdAt: DateTime!
+  email: String
+  eventOrganized: Event
+  eventParticipated: Event
+  id: String!
+  image: String
+  name: String
+  refreshToken: String
+  updatedAt: DateTime!
+}
+
+type UserForm {
+  createdAt: DateTime!
+  formValues: [FormValue!]
+  updatedAt: DateTime!
+  userParticipateEvent: UserParticipateEvent!
+}
+
+type UserParticipateEvent {
+  event: Event!
+  feedback: String
+  isArrived: Boolean!
+  rating: Float!
+  user: User!
+  userForm: UserForm!
+}
