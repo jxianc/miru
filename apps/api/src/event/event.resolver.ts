@@ -25,11 +25,15 @@ export class EventResolver {
   @UseGuards(JwtGqlAuthGuard)
   @Query(() => [Event])
   getEventsOrganized(@Context() ctx: any) {
-    return this.eventService.findEventsByOrganizerId(ctx.user.id)
+    return this.eventService.findEventsByOrganizerId(ctx.req.user.id)
   }
 
   // find all events by participant
-  // TODO getEventsParticipated
+  @UseGuards(JwtGqlAuthGuard)
+  @Query(() => [Event])
+  getEventsParticipated(@Context() ctx: any) {
+    return this.eventService.findEventsByParticipantId(ctx.req.user.id)
+  }
 
   // create event
   @UseGuards(JwtGqlAuthGuard)

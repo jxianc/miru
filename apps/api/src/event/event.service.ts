@@ -149,6 +149,18 @@ export class EventService {
     return userWithEventOrganized?.eventOrganized || []
   }
 
+  async findEventsByParticipantId(participantId: string) {
+    const userWithEventParticipated = await this.prisma.user.findUnique({
+      where: {
+        id: participantId,
+      },
+      include: {
+        eventParticapted: true,
+      },
+    })
+    return userWithEventParticipated?.eventParticapted || []
+  }
+
   async connectOrganizers(
     organizerIds: [string],
     eventId: string,
