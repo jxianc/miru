@@ -11,7 +11,7 @@ export class AuthController {
 
   @UseGuards(GoogleAuthGuard)
   @Get('google/sign-in')
-  googleSignIn(@Res() res) {
+  googleSignIn(@Res() res: Response) {
     res.status(200).send({ msg: 'logged in' })
   }
 
@@ -20,15 +20,16 @@ export class AuthController {
   async googleRedirect(@Req() req: Request, @Res() res: Response) {
     const user = req.user as OAuthUser
     const response = await this.authService.oauthSignIn(user, res)
-    // console.log('user: ', user)
-    // console.log('access token: ', response.accessToken)
-    res.redirect(process.env.CLIENT_ORIGIN)
+    console.log('user: ', user)
+    console.log('access token: ', response.accessToken)
+    res.send(response.accessToken)
+    // res.redirect(process.env.CLIENT_ORIGIN)
     return response
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('test')
-  authTest(@Req() req) {
+  authTest() {
     return 'hello world'
   }
 }

@@ -55,19 +55,29 @@ export class FormService {
     eventId: string,
     updateFormKeyInputs: UpdateFormKeyInput[],
   ): Promise<BaseResponse> {
+    let successCount = 0
     try {
-      const { count } = await this.prisma.formKey.updateMany({
-        data: updateFormKeyInputs.map((input) => {
-          return {
-            eventId,
-            ...input,
-          }
-        }),
-      })
+      for (const input of updateFormKeyInputs) {
+        const updatedFormKey = await this.prisma.formKey.update({
+          where: {
+            id_eventId: {
+              id: input.id,
+              eventId,
+            },
+          },
+          data: {
+            label: input.label,
+          },
+        })
+
+        if (updatedFormKey) {
+          successCount++
+        }
+      }
       return {
-        success: updateFormKeyInputs.length === count,
+        success: updateFormKeyInputs.length === successCount,
         errMsg:
-          updateFormKeyInputs.length === count
+          updateFormKeyInputs.length === successCount
             ? undefined
             : 'error occurred when updating form keys',
       }
@@ -85,8 +95,8 @@ export class FormService {
     removeFormKeyInputs: number[],
   ): Promise<BaseResponse> {
     let successCount = 0
-    for (const input of removeFormKeyInputs) {
-      try {
+    try {
+      for (const input of removeFormKeyInputs) {
         await this.prisma.formKey.delete({
           where: {
             id_eventId: {
@@ -96,20 +106,20 @@ export class FormService {
           },
         })
         successCount++
-      } catch (err) {
-        console.log(err)
-        return {
-          success: false,
-          errMsg: 'error occurred when removing form keys',
-        }
       }
-    }
-    return {
-      success: successCount === removeFormKeyInputs.length,
-      errMsg:
-        successCount === removeFormKeyInputs.length
-          ? undefined
-          : 'error occurred when removing form keys',
+      return {
+        success: successCount === removeFormKeyInputs.length,
+        errMsg:
+          successCount === removeFormKeyInputs.length
+            ? undefined
+            : 'error occurred when removing form keys',
+      }
+    } catch (err) {
+      console.log(err)
+      return {
+        success: false,
+        errMsg: 'error occurred when removing form keys',
+      }
     }
   }
 
@@ -118,6 +128,23 @@ export class FormService {
     eventId: string,
     formValueInputs: FormValueInput[],
   ): Promise<BaseResponse> {
+    const userParticipateEvent =
+      await this.prisma.userParticipateEvent.findUnique({
+        where: {
+          eventId_userId: {
+            eventId,
+            userId,
+          },
+        },
+      })
+
+    if (userParticipateEvent) {
+      return {
+        success: false,
+        errMsg: 'user has signed up for this event',
+      }
+    }
+
     try {
       const userParticipateEvent =
         await this.prisma.userParticipateEvent.create({

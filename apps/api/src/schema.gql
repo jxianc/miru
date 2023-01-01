@@ -123,10 +123,10 @@ type Mutation {
   refreshToken: AuthResponse!
   removeAnnouncement(announcementId: Float!, eventId: String!): BaseResponse!
   removeEvent(eventId: String!): BaseResponse!
-  signUpEvent(eventId: String!, formValueInputs: FormValueInput!): BaseResponse!
+  signUpEvent(eventId: String!, formValueInputs: [FormValueInput!]!): BaseResponse!
   updateAnnouncement(eventId: String!, updateAnnouncementInput: UpdateAnnouncementInput!): UpdateAnnouncementResponse!
   updateEvent(eventId: String!, updateEventInput: UpdateEventInput!): UpdateEventResponse!
-  updateForm(createFormKeyInputs: CreateFormKeyInput!, eventId: String!, removeFormKeyInputs: [Int!]!, updateFormKeyInputs: UpdateFormKeyInput!): UpdateFormResponse!
+  updateForm(createFormKeyInputs: [CreateFormKeyInput!], eventId: String!, removeFormKeyInputs: [Int!], updateFormKeyInputs: [UpdateFormKeyInput!]): UpdateFormResponse!
 }
 
 type Query {
@@ -168,7 +168,7 @@ type UpdateEventResponse {
 }
 
 input UpdateFormKeyInput {
-  id: String!
+  id: Float!
   label: String
 }
 

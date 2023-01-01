@@ -144,7 +144,11 @@ export class LiveboardService {
       },
       include: {
         announcements: true,
-        participants: true,
+        participants: {
+          include: {
+            user: true,
+          },
+        },
       },
     })
 

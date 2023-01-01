@@ -10,6 +10,7 @@ import { UpdateAnnouncementResponse } from './dto/update-announcement.response'
 import { LiveboardService } from './liveboard.service'
 import { ParticipantGuard } from '../auth/guards/participant.guard'
 import { LiveboardResponse } from './dto/liveboard.response'
+import { ParticipantAndOrganizerGuard } from '../auth/guards/participant-and-organizer.guard'
 
 @Resolver()
 export class LiveboardResolver {
@@ -53,11 +54,14 @@ export class LiveboardResolver {
     @Args({ name: 'announcementId' }) announcementId: number,
   ) {
     // TODO publish event
-    return await this.removeAnnouncement(eventId, announcementId)
+    return await this.liveboardService.removeAnnouncement(
+      eventId,
+      announcementId,
+    )
   }
 
   // take attendance, publish events
-  @UseGuards(JwtGqlAuthGuard)
+  @UseGuards(JwtGqlAuthGuard, ParticipantGuard)
   @Mutation(() => BaseResponse)
   async attendEvent(
     @Context() ctx: any,
@@ -71,7 +75,7 @@ export class LiveboardResolver {
   }
 
   // quit event, publish events
-  @UseGuards(JwtGqlAuthGuard)
+  @UseGuards(JwtGqlAuthGuard, ParticipantGuard)
   @Mutation(() => BaseResponse)
   async quitEvent(
     @Context() ctx: any,
@@ -85,7 +89,7 @@ export class LiveboardResolver {
   }
 
   // get liveboard, subcribe to events
-  @UseGuards(JwtGqlAuthGuard, ParticipantGuard) // TODO allow organizer as well
+  @UseGuards(JwtGqlAuthGuard, ParticipantAndOrganizerGuard)
   @Query(() => LiveboardResponse)
   async getLiveboard(@Args({ name: 'eventId' }) eventId: string) {
     // TODO subscribe events

@@ -9,5 +9,5 @@ export class CreateFormKeyInput {
 @InputType()
 export class UpdateFormKeyInput extends PartialType(CreateFormKeyInput) {
   @Field()
-  id!: string
+  id!: number
 }

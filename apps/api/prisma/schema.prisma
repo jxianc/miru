@@ -86,7 +86,7 @@ model UserForm {
   userId               String               @map("user_id")
   createdAt            DateTime             @default(now()) @map("created_at")
   updatedAt            DateTime             @updatedAt() @map("updated_at")
-  userParticipateEvent UserParticipateEvent @relation(fields: [eventId, userId], references: [eventId, userId])
+  userParticipateEvent UserParticipateEvent @relation(fields: [eventId, userId], references: [eventId, userId], onDelete: Cascade)
   formValues           FormValue[]
 
   @@id([eventId, userId])
@@ -100,7 +100,7 @@ model FormValue {
   userId    String   @map("user_id")
   value     String
   formKey   FormKey  @relation(fields: [formKeyId, eventId], references: [id, eventId])
-  userForm  UserForm @relation(fields: [eventId, userId], references: [eventId, userId])
+  userForm  UserForm @relation(fields: [eventId, userId], references: [eventId, userId], onDelete: Cascade)
 
   @@id([formKeyId, eventId, userId])
   @@index([formKeyId, eventId])
