@@ -3,16 +3,15 @@ import {
   CanActivate,
   ExecutionContext,
   UnauthorizedException,
-  NotFoundException,
 } from '@nestjs/common'
 import { GqlExecutionContext } from '@nestjs/graphql'
 import { User } from '@prisma/client'
-import { PrismaService } from '../../prisma.service'
+import { EventService } from '../../event/event.service'
 
 // NOTE make sure the resolvers using this guard provide `eventId` as argument
 @Injectable()
 export class ParticipantAndOrganizerGuard implements CanActivate {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly eventService: EventService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context)
@@ -20,35 +19,19 @@ export class ParticipantAndOrganizerGuard implements CanActivate {
 
     const { eventId } = ctx.getArgs()
     if (eventId) {
-      const userPartipateEvent =
-        await this.prismaService.userParticipateEvent.findUnique({
-          where: {
-            eventId_userId: {
-              eventId,
-              userId: user.id,
-            },
-          },
-        })
-
-      if (userPartipateEvent) {
+      const organizer = await this.eventService.findOrganizerByEvent(
+        eventId,
+        user.id,
+      )
+      if (organizer) {
         return true
       }
-    }
 
-    const event = await this.prismaService.event.findUnique({
-      where: {
-        id: eventId,
-      },
-      include: {
-        organizers: true,
-      },
-    })
-    if (!event) {
-      throw new NotFoundException('event is not found')
-    }
-
-    for (const org of event.organizers) {
-      if (org.id === user.id) {
+      const participant = await this.eventService.findParticipantsByEvent(
+        eventId,
+        user.id,
+      )
+      if (participant) {
         return true
       }
     }

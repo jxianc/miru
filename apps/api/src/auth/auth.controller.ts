@@ -20,8 +20,8 @@ export class AuthController {
   async googleRedirect(@Req() req: Request, @Res() res: Response) {
     const user = req.user as OAuthUser
     const response = await this.authService.oauthSignIn(user, res)
-    console.log('user: ', user)
-    console.log('access token: ', response.accessToken)
+    // console.log('user: ', user)
+    // console.log('access token: ', response.accessToken)
     res.send(response.accessToken)
     // res.redirect(process.env.CLIENT_ORIGIN)
     return response

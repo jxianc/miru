@@ -1,18 +1,17 @@
 import {
-  Injectable,
   CanActivate,
   ExecutionContext,
-  NotFoundException,
+  Injectable,
   UnauthorizedException,
 } from '@nestjs/common'
 import { GqlExecutionContext } from '@nestjs/graphql'
 import { User } from '@prisma/client'
-import { PrismaService } from '../../prisma.service'
+import { EventService } from '../../event/event.service'
 
 // NOTE make sure the resolvers using this guard provide `eventId` as argument
 @Injectable()
 export class ParticipantGuard implements CanActivate {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly eventService: EventService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context)
@@ -20,17 +19,11 @@ export class ParticipantGuard implements CanActivate {
 
     const { eventId } = ctx.getArgs()
     if (eventId) {
-      const userPartipateEvent =
-        await this.prismaService.userParticipateEvent.findUnique({
-          where: {
-            eventId_userId: {
-              eventId,
-              userId: user.id,
-            },
-          },
-        })
-
-      if (userPartipateEvent) {
+      const participant = await this.eventService.findParticipantsByEvent(
+        eventId,
+        user.id,
+      )
+      if (participant) {
         return true
       }
     }
