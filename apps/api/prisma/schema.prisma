@@ -109,14 +109,15 @@ model FormValue {
 }
 
 model UserParticipateEvent {
-  eventId   String    @map("event_id")
-  userId    String    @map("user_id")
-  isArrived Boolean   @default(false) @map("is_arrived")
-  feedback  String?   @db.VarChar(500)
-  rating    Int?
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  event     Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  userForm  UserForm?
+  eventId     String    @map("event_id")
+  userId      String    @map("user_id")
+  isArrived   Boolean   @default(false) @map("is_arrived")
+  isArrivedAt DateTime? @map("is_arrived_at")
+  feedback    String?   @db.VarChar(500)
+  rating      Int?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userForm    UserForm?
 
   @@id([eventId, userId])
   @@index([eventId])
@@ -125,7 +126,7 @@ model UserParticipateEvent {
 }
 
 model Announcement {
-  id          Int
+  id          Int      @default(autoincrement())
   eventId     String   @map("event_id")
   title       String   @db.VarChar(100)
   description String   @db.VarChar(500)

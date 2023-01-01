@@ -10,6 +10,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core'
 import { AppResolver } from './app.resolver'
 import { EventModule } from './event/event.module'
 import { FormModule } from './form/form.module'
+import { LiveboardModule } from './liveboard/liveboard.module'
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { FormModule } from './form/form.module'
     AuthModule,
     EventModule,
     FormModule,
+    LiveboardModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
