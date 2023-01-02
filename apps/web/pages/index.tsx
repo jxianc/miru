@@ -1,5 +1,5 @@
-import Navbar from '../components/Navbar'
 import { FcGoogle } from 'react-icons/fc'
+
 export default function Web() {
   return (
     <div className="my-5 mx-5 h-screen items-center gap-10 flex flex-col justify-center">
