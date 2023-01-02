@@ -11,17 +11,24 @@
   },
   "dependencies": {
     "@mr/ui": "workspace:*",
+    "@next/env": "^13.1.1",
+    "@urql/devtools": "^2.0.3",
     "flowbite": "^1.5.5",
     "flowbite-react": "^0.3.7",
     "graphql": "^16.6.0",
     "next": "13.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-icons": "^4.7.1"
+    "react-icons": "^4.7.1",
+    "urql": "^3.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@graphql-codegen/cli": "2.16.2",
+    "@graphql-codegen/client-preset": "1.2.4",
+    "@graphql-codegen/typescript": "^2.8.6",
+    "@graphql-codegen/typescript-operations": "^2.5.11",
+    "@graphql-codegen/typescript-urql": "^3.7.3",
     "@mr/eslint-config-custom": "workspace:*",
     "@mr/tsconfig": "workspace:*",
     "@types/node": "^17.0.12",
@@ -31,7 +38,6 @@
     "eslint": "7.32.0",
     "postcss": "^8.4.20",
     "tailwindcss": "^3.2.4",
-    "typescript": "^4.5.3",
-    "@graphql-codegen/client-preset": "1.2.4"
+    "typescript": "^4.5.3"
   }
 }
