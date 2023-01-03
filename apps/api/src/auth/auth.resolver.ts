@@ -5,6 +5,7 @@ import { AuthResponse } from './dtos/auth.response'
 import { User as UserEntity } from './entities/user.entity'
 import { JwtGqlAuthGuard } from './guards/jwt.guard'
 import { User } from '@prisma/client'
+import { CurrentUser } from './decorators/current-user.decorator'
 
 @Resolver()
 export class AuthResolver {
@@ -17,7 +18,7 @@ export class AuthResolver {
 
   @UseGuards(JwtGqlAuthGuard)
   @Query(() => UserEntity)
-  me(@Context() ctx: any) {
-    return ctx.req.user as User
+  me(@CurrentUser() user: User) {
+    return user
   }
 }

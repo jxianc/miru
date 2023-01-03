@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common'
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { BaseResponse } from '../base/base.response'
 import { JwtGqlAuthGuard } from '../auth/guards/jwt.guard'
 import { OrganizerGuard } from '../auth/guards/organizer.guard'
@@ -11,6 +11,8 @@ import { LiveboardService } from './liveboard.service'
 import { ParticipantGuard } from '../auth/guards/participant.guard'
 import { LiveboardResponse } from './dto/liveboard.response'
 import { ParticipantAndOrganizerGuard } from '../auth/guards/participant-and-organizer.guard'
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
+import { User } from '@prisma/client'
 
 @Resolver()
 export class LiveboardResolver {
@@ -64,28 +66,22 @@ export class LiveboardResolver {
   @UseGuards(JwtGqlAuthGuard, ParticipantGuard)
   @Mutation(() => BaseResponse)
   async attendEvent(
-    @Context() ctx: any,
     @Args({ name: 'eventId' }) eventId: string,
+    @CurrentUser() user: User,
   ) {
     // TODO publish event
-    return await this.liveboardService.attendEvent(
-      ctx.req.user.id as string,
-      eventId,
-    )
+    return await this.liveboardService.attendEvent(user.id, eventId)
   }
 
   // quit event, publish events
   @UseGuards(JwtGqlAuthGuard, ParticipantGuard)
   @Mutation(() => BaseResponse)
   async quitEvent(
-    @Context() ctx: any,
     @Args({ name: 'eventId' }) eventId: string,
+    @CurrentUser() user: User,
   ) {
     // TODO publish event
-    return await this.liveboardService.quitEvent(
-      ctx.req.user.id as string,
-      eventId,
-    )
+    return await this.liveboardService.quitEvent(user.id, eventId)
   }
 
   // get liveboard, subcribe to events
