@@ -1,10 +1,20 @@
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import { FcGoogle } from 'react-icons/fc'
-import { useHelloQuery } from '../generated/graphql'
+import { useMeQuery } from '../generated/graphql'
 
 export default function Web() {
-  const [{ data }] = useHelloQuery()
+  // const router = useRouter()
+  // const [{ data: meData }] = useMeQuery()
 
-  console.log(data)
+  // useEffect(() => {
+  //   if (meData?.me) {
+  //     console.log('logged in, navigating')
+  //     router.push(`/dashboard/${meData.me.id}`)
+  //   }
+
+  //   console.log('not logged in')
+  // }, [meData])
 
   return (
     <div className="my-5 mx-5 h-screen items-center gap-10 flex flex-col justify-center">

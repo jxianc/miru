@@ -33,6 +33,7 @@ importers:
       '@nestjs/testing': ^8.4.7
       '@prisma/client': ^4.8.0
       '@types/bcrypt': ^5.0.0
+      '@types/cookie-parser': ^1.4.3
       '@types/express': ^4.17.15
       '@types/jest': 27.4.1
       '@types/node': ^16.18.10
@@ -44,6 +45,7 @@ importers:
       apollo-server-core: ^3.11.1
       apollo-server-express: ^3.11.1
       bcrypt: ^5.1.0
+      cookie-parser: ^1.4.6
       eslint: ^8.30.0
       eslint-config-prettier: ^8.5.0
       eslint-plugin-prettier: ^4.2.1
@@ -78,6 +80,7 @@ importers:
       apollo-server-core: 3.11.1_graphql@16.6.0
       apollo-server-express: 3.11.1_graphql@16.6.0
       bcrypt: 5.1.0
+      cookie-parser: 1.4.6
       graphql: 16.6.0
       passport: 0.6.0
       passport-google-oauth20: 2.0.0
@@ -91,6 +94,7 @@ importers:
       '@nestjs/schematics': 8.0.11_typescript@4.9.4
       '@nestjs/testing': 8.4.7_yg656aic4dli3q2c2sx4xyqza4
       '@types/bcrypt': 5.0.0
+      '@types/cookie-parser': 1.4.3
       '@types/express': 4.17.15
       '@types/jest': 27.4.1
       '@types/node': 16.18.10
@@ -128,12 +132,15 @@ importers:
       '@types/node': ^17.0.12
       '@types/react': ^18.0.22
       '@types/react-dom': ^18.0.7
+      '@urql/core': ^3.1.1
       '@urql/devtools': ^2.0.3
+      '@urql/exchange-auth': ^1.0.0
       autoprefixer: ^10.4.13
       eslint: 7.32.0
       flowbite: ^1.5.5
       flowbite-react: ^0.3.7
       graphql: ^16.6.0
+      jwt-decode: ^3.1.2
       next: 13.0.0
       postcss: ^8.4.20
       react: 18.2.0
@@ -145,10 +152,13 @@ importers:
     dependencies:
       '@mr/ui': link:../../packages/ui
       '@next/env': 13.1.1
-      '@urql/devtools': 2.0.3_graphql@16.6.0
+      '@urql/core': 3.1.1_graphql@16.6.0
+      '@urql/devtools': 2.0.3_ioimjbecbkqzfeizgamzrgwc3y
+      '@urql/exchange-auth': 1.0.0_graphql@16.6.0
       flowbite: 1.5.5
       flowbite-react: 0.3.7_2u4tppfvni4fsjqzqqaggxutoe
       graphql: 16.6.0
+      jwt-decode: 3.1.2
       next: 13.0.0_672uxklweod7ene3nqtsh262ca
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -3051,6 +3061,12 @@ packages:
     dependencies:
       '@types/node': 17.0.45
 
+  /@types/cookie-parser/1.4.3:
+    resolution: {integrity: sha512-CqSKwFwefj4PzZ5n/iwad/bow2hTCh0FlNAeWLtQM3JA/NX/iYagIpWG2cf1bQKQ2c9gU2log5VUCrn7LDOs0w==}
+    dependencies:
+      '@types/express': 4.17.15
+    dev: true
+
   /@types/cookiejar/2.1.2:
     resolution: {integrity: sha512-t73xJJrvdTjXrn4jLS9VSGRbz0nUY3cl2DMGDU48lKl+HR9dbbjW2A9r3g40VA++mQpy6uuHg33gy7du2BKpog==}
     dev: true
@@ -3445,12 +3461,23 @@ packages:
       wonka: 6.1.2
     dev: false
 
-  /@urql/devtools/2.0.3_graphql@16.6.0:
+  /@urql/devtools/2.0.3_ioimjbecbkqzfeizgamzrgwc3y:
     resolution: {integrity: sha512-TktPLiBS9LcBPHD6qcnb8wqOVcg3Bx0iCtvQ80uPpfofwwBGJmqnQTjUdEFU6kwaLOFZULQ9+Uo4831G823mQw==}
     peerDependencies:
       '@urql/core': '>= 1.14.0'
       graphql: '>= 0.11.0'
     dependencies:
+      '@urql/core': 3.1.1_graphql@16.6.0
+      graphql: 16.6.0
+      wonka: 6.1.2
+    dev: false
+
+  /@urql/exchange-auth/1.0.0_graphql@16.6.0:
+    resolution: {integrity: sha512-79hqPQab+ifeINOxvQykvqub4ixWHBEIagN4U67ijcHGMfp3c4yEWRk4IJMPwF+OMT7LrRFuv+jRIZTQn/9VwQ==}
+    peerDependencies:
+      graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      '@urql/core': 3.1.1_graphql@16.6.0
       graphql: 16.6.0
       wonka: 6.1.2
     dev: false
@@ -4665,8 +4692,21 @@ packages:
   /convert-source-map/1.9.0:
     resolution: {integrity: sha512-ASFBup0Mz1uyiIjANan1jzLQami9z1PoYSZCiiYW2FczPbenXc45FZdBZLzOT+r6+iciuEModtmCti+hjaAk0A==}
 
+  /cookie-parser/1.4.6:
+    resolution: {integrity: sha512-z3IzaNjdwUC2olLIB5/ITd0/setiaFMLYiZJle7xg5Fe9KWAceil7xszYfHHBtDFYLSgJduS2Ty0P1uJdPDJeA==}
+    engines: {node: '>= 0.8.0'}
+    dependencies:
+      cookie: 0.4.1
+      cookie-signature: 1.0.6
+    dev: false
+
   /cookie-signature/1.0.6:
     resolution: {integrity: sha1-4wOogrNCzD7oylE6eZmXNNqzriw=}
+
+  /cookie/0.4.1:
+    resolution: {integrity: sha512-ZwrFkGJxUR3EIoXtO+yVE69Eb7KlixbaeAWfBQB9vVsNn/o+Yw69gBWSSDK825hQNdN+wF8zELf3dFNl/kxkUA==}
+    engines: {node: '>= 0.6'}
+    dev: false
 
   /cookie/0.5.0:
     resolution: {integrity: sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==}
@@ -7435,6 +7475,10 @@ packages:
     dependencies:
       jwa: 1.4.1
       safe-buffer: 5.2.1
+
+  /jwt-decode/3.1.2:
+    resolution: {integrity: sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==}
+    dev: false
 
   /kleur/3.0.3:
     resolution: {integrity: sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==}

@@ -1,13 +1,13 @@
 import type { AppProps } from 'next/app'
-import { Provider } from 'urql'
-import { client } from '../libs/urql-client'
+import { Provider as UrqlProvider } from 'urql'
+import { client } from '../libs/urql/urql-client'
 import '../styles/globals.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Provider value={client}>
+    <UrqlProvider value={client}>
       <Component {...pageProps} />
-    </Provider>
+    </UrqlProvider>
   )
 }
 

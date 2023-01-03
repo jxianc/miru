@@ -217,6 +217,7 @@ export type Query = {
   getForm: Form
   getLiveboard: LiveboardResponse
   hello: Scalars['String']
+  me: User
 }
 
 export type QueryGetEventArgs = {
@@ -305,10 +306,49 @@ export type UserParticipateEvent = {
   userForm: UserForm
 }
 
+export type RefreshTokenMutationVariables = Exact<{ [key: string]: never }>
+
+export type RefreshTokenMutation = {
+  __typename?: 'Mutation'
+  refreshToken: {
+    __typename?: 'AuthResponse'
+    accessToken?: string | null
+    errMsg?: string | null
+    success: boolean
+  }
+}
+
 export type HelloQueryVariables = Exact<{ [key: string]: never }>
 
 export type HelloQuery = { __typename?: 'Query'; hello: string }
 
+export type MeQueryVariables = Exact<{ [key: string]: never }>
+
+export type MeQuery = {
+  __typename?: 'Query'
+  me: {
+    __typename?: 'User'
+    id: string
+    name?: string | null
+    email?: string | null
+  }
+}
+
+export const RefreshTokenDocument = gql`
+  mutation RefreshToken {
+    refreshToken {
+      accessToken
+      errMsg
+      success
+    }
+  }
+`
+
+export function useRefreshTokenMutation() {
+  return Urql.useMutation<RefreshTokenMutation, RefreshTokenMutationVariables>(
+    RefreshTokenDocument,
+  )
+}
 export const HelloDocument = gql`
   query Hello {
     hello
@@ -320,6 +360,24 @@ export function useHelloQuery(
 ) {
   return Urql.useQuery<HelloQuery, HelloQueryVariables>({
     query: HelloDocument,
+    ...options,
+  })
+}
+export const MeDocument = gql`
+  query Me {
+    me {
+      id
+      name
+      email
+    }
+  }
+`
+
+export function useMeQuery(
+  options?: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'>,
+) {
+  return Urql.useQuery<MeQuery, MeQueryVariables>({
+    query: MeDocument,
     ...options,
   })
 }
