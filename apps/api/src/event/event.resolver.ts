@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common'
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { BaseResponse } from '../base/base.response'
 import { JwtGqlAuthGuard } from '../auth/guards/jwt.guard'
 import { CreateEventInput } from './dto/create-event.input'
@@ -9,12 +9,14 @@ import { UpdateEventResponse } from './dto/update-event.response'
 import { Event } from './entities/event.entity'
 import { EventService } from './event.service'
 import { OrganizerGuard } from '../auth/guards/organizer.guard'
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
+import { User } from '@prisma/client'
 
 @Resolver(() => Event)
 export class EventResolver {
   constructor(private readonly eventService: EventService) {}
 
-  // find events by event id
+  // find event by event id
   @UseGuards(JwtGqlAuthGuard, OrganizerGuard)
   @Query(() => Event)
   getEvent(@Args({ name: 'eventId' }) eventId: string) {
@@ -24,15 +26,15 @@ export class EventResolver {
   // find all events by organizer
   @UseGuards(JwtGqlAuthGuard)
   @Query(() => [Event])
-  getEventsOrganized(@Context() ctx: any) {
-    return this.eventService.findEventsByOrganizerId(ctx.req.user.id)
+  getEventsOrganized(@CurrentUser() user: User) {
+    return this.eventService.findEventsByOrganizerId(user.id)
   }
 
   // find all events by participant
   @UseGuards(JwtGqlAuthGuard)
   @Query(() => [Event])
-  getEventsParticipated(@Context() ctx: any) {
-    return this.eventService.findEventsByParticipantId(ctx.req.user.id)
+  getEventsParticipated(@CurrentUser() user: User) {
+    return this.eventService.findEventsByParticipantId(user.id)
   }
 
   // create event
@@ -40,12 +42,10 @@ export class EventResolver {
   @Mutation(() => CreateEventResponse)
   createEvent(
     @Args({ name: 'createEventInput' }) createEventInput: CreateEventInput,
-    @Context() ctx: any,
+    @CurrentUser() user: User,
   ) {
     // TODO add organizers parameter to add mulitple organizers when creating event
-    return this.eventService.create(createEventInput, [
-      ctx.req.user.id as string,
-    ])
+    return this.eventService.create(createEventInput, [user.id])
   }
 
   // update event
