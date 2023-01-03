@@ -4,6 +4,6 @@ module.exports = {
     transpilePackages: ['ui'],
   },
   images: {
-    domains: ['images.unsplash.com'],
+    domains: ['images.unsplash.com', 'media.licdn.com'],
   },
 }

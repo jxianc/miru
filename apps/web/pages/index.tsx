@@ -2,12 +2,12 @@ import Navbar from '../components/Navbar'
 import { FcGoogle } from 'react-icons/fc'
 export default function Web() {
   return (
-    <div className="my-5 mx-5 h-screen items-center gap-10 flex flex-col justify-center">
-      <h1 className="font-mono font-semibold text-[40px] ">
+    <div className="flex flex-col items-center justify-center h-screen gap-10">
+      <h1 className="font-semibold text-[40px] ">
         A better way to manage your event.
       </h1>
       <div
-        className="hover:cursor-pointer flex font-mono justify-center items-center gap-5 border p-5 rounded-xl "
+        className="flex items-center justify-center gap-5 p-5 border hover:cursor-pointer rounded-xl "
         onClick={() => console.log('print')}
       >
         <FcGoogle className="text-2xl" />

@@ -126,6 +126,7 @@ importers:
       eslint: 7.32.0
       flowbite: ^1.5.5
       flowbite-react: ^0.3.7
+      jotai: ^1.12.1
       next: 13.0.0
       postcss: ^8.4.20
       react: 18.2.0
@@ -137,6 +138,7 @@ importers:
       '@mr/ui': link:../../packages/ui
       flowbite: 1.5.5
       flowbite-react: 0.3.7_2u4tppfvni4fsjqzqqaggxutoe
+      jotai: 1.12.1_zavbqmrropwrojvx6ojaa4s7im
       next: 13.0.0_672uxklweod7ene3nqtsh262ca
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -5674,6 +5676,47 @@ packages:
       - ts-node
       - utf-8-validate
     dev: true
+
+  /jotai/1.12.1_zavbqmrropwrojvx6ojaa4s7im:
+    resolution: {integrity: sha512-t6gsYM1WkQHMOazaZYLykCA+fh9KPDGrA+tDYzDeV0268QsCqmX6S4lO46uswgt1LGUeG0EDFGuMd9ac8cWNTA==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@babel/core': '*'
+      '@babel/template': '*'
+      jotai-immer: '*'
+      jotai-optics: '*'
+      jotai-redux: '*'
+      jotai-tanstack-query: '*'
+      jotai-urql: '*'
+      jotai-valtio: '*'
+      jotai-xstate: '*'
+      jotai-zustand: '*'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@babel/template':
+        optional: true
+      jotai-immer:
+        optional: true
+      jotai-optics:
+        optional: true
+      jotai-redux:
+        optional: true
+      jotai-tanstack-query:
+        optional: true
+      jotai-urql:
+        optional: true
+      jotai-valtio:
+        optional: true
+      jotai-xstate:
+        optional: true
+      jotai-zustand:
+        optional: true
+    dependencies:
+      '@babel/core': 7.20.5
+      react: 18.2.0
+    dev: false
 
   /js-sdsl/4.2.0:
     resolution: {integrity: sha512-dyBIzQBDkCqCu+0upx25Y2jGdbTGxE9fshMsCdK0ViOongpV+n5tXRcZY9v7CaVQ79AGS9KA1KHtojxiM7aXSQ==}
