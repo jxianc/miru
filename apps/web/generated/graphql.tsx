@@ -331,6 +331,9 @@ export type MeQuery = {
     id: string
     name?: string | null
     email?: string | null
+    image?: string | null
+    createdAt: any
+    updatedAt: any
   }
 }
 
@@ -369,6 +372,9 @@ export const MeDocument = gql`
       id
       name
       email
+      image
+      createdAt
+      updatedAt
     }
   }
 `

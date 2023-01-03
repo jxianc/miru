@@ -3,14 +3,18 @@ import Image from 'next/image'
 import { setNavbarStatusAtom, NavbarState } from '../libs/atom/navbar.atom'
 import { atom, useAtom } from 'jotai'
 
-interface NavbarProps {}
+interface NavbarProps {
+  name: string
+  image?: string
+}
 
-const Navbar: React.FC<NavbarProps> = () => {
+const Navbar: React.FC<NavbarProps> = ({ name, image }) => {
   const [navbarStatus, setNavbarStatus] = useAtom(setNavbarStatusAtom)
+
   return (
     <div className="flex flex-row items-center justify-between w-full p-5 border border-black rounded-xl">
       {/* front part */}
-      <div> Hey, Ley Kwan</div>
+      <div> Hey, {name}</div>
 
       {/* end part */}
       <div className="flex flex-row items-center justify-center gap-8">
@@ -43,7 +47,10 @@ const Navbar: React.FC<NavbarProps> = () => {
           width={40}
           height={40}
           className="rounded-full"
-          src="https://media.licdn.com/dms/image/C5603AQGrADSoKzdbnQ/profile-displayphoto-shrink_400_400/0/1661447582600?e=1678320000&v=beta&t=gxdqoNAv0qZ_blSbIJzzawYfg5cF_mGf2UPmlOHnBgQ"
+          src={
+            image ||
+            'https://media.licdn.com/dms/image/C5603AQGrADSoKzdbnQ/profile-displayphoto-shrink_400_400/0/1661447582600?e=1678320000&v=beta&t=gxdqoNAv0qZ_blSbIJzzawYfg5cF_mGf2UPmlOHnBgQ'
+          }
           alt="Rounded avatar"
         />
       </div>

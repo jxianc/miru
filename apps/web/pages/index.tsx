@@ -1,20 +1,21 @@
+import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 import { useMeQuery } from '../generated/graphql'
+import { setCurrUserAtom } from '../libs/atom/current-user.atom'
 
 export default function Web() {
-  // const router = useRouter()
-  // const [{ data: meData }] = useMeQuery()
+  const router = useRouter()
+  const [{ data: meData }] = useMeQuery()
+  const [_currUser, setCurrUser] = useAtom(setCurrUserAtom)
 
-  // useEffect(() => {
-  //   if (meData?.me) {
-  //     console.log('logged in, navigating')
-  //     router.push(`/dashboard/${meData.me.id}`)
-  //   }
-
-  //   console.log('not logged in')
-  // }, [meData])
+  useEffect(() => {
+    if (meData?.me) {
+      setCurrUser(meData.me)
+      router.push(`/dashboard/${meData.me.id}`)
+    }
+  }, [meData, setCurrUser])
 
   return (
     <div className="flex flex-col items-center justify-center h-screen gap-10">
