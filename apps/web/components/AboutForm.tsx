@@ -138,12 +138,12 @@ export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
                         <div className="radio-item">
                           <input
                             {...field}
-                            id="male"
+                            id="none"
                             value="none"
                             checked={field.value === 'none'}
                             type="radio"
                           />
-                          <label htmlFor="male" className="ml-2">
+                          <label htmlFor="none" className="ml-2">
                             None
                           </label>
                         </div>
@@ -151,12 +151,12 @@ export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
                         <div className="radio-item">
                           <input
                             {...field}
-                            id="female"
+                            id="yes"
                             value="yes"
                             checked={field.value === 'yes'}
                             type="radio"
                           />
-                          <label htmlFor="female" className="ml-2">
+                          <label htmlFor="yes" className="ml-2">
                             Yes
                           </label>
                         </div>
