@@ -22,8 +22,7 @@ export class AuthController {
     const response = await this.authService.oauthSignIn(user, res)
     // console.log('user: ', user)
     // console.log('access token: ', response.accessToken)
-    res.send(response.accessToken)
-    // res.redirect(process.env.CLIENT_ORIGIN)
+    res.redirect(process.env.CLIENT_ORIGIN)
     return response
   }
 
