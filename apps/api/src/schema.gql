@@ -136,6 +136,7 @@ type Query {
   getForm(eventId: String!): Form!
   getLiveboard(eventId: String!): LiveboardResponse!
   hello: String!
+  me: User!
 }
 
 input UpdateAnnouncementInput {

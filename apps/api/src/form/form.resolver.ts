@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common'
-import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { OrganizerGuard } from '../auth/guards/organizer.guard'
 import { JwtGqlAuthGuard } from '../auth/guards/jwt.guard'
 import { BaseResponse } from '../base/base.response'
@@ -8,6 +8,8 @@ import { FormValueInput } from './dto/form-value.input'
 import { UpdateFormResponse } from './dto/update-form.response'
 import { Form as FormEntity } from './entities/form.entity'
 import { FormService } from './form.service'
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
+import { User } from '@prisma/client'
 
 @Resolver()
 export class FormResolver {
@@ -88,12 +90,8 @@ export class FormResolver {
     @Args({ name: 'eventId' }) eventId: string,
     @Args({ name: 'formValueInputs', type: () => [FormValueInput] })
     formValueInputs: FormValueInput[],
-    @Context() ctx: any,
+    @CurrentUser() user: User,
   ) {
-    return await this.formService.signUpEvent(
-      ctx.req.user.id as string,
-      eventId,
-      formValueInputs,
-    )
+    return await this.formService.signUpEvent(user.id, eventId, formValueInputs)
   }
 }
