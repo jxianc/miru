@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai'
 import { NextPage } from 'next'
 import { useState } from 'react'
+import { AboutForm } from '../../components/AboutForm'
 import Navbar from '../../components/Navbar'
 import { navbarStatusAtom } from '../../libs/atom/navbar.atom'
 
@@ -21,7 +22,7 @@ const Dashboard: NextPage<DashboardProps> = ({}) => {
             {/* Left card */}
             <div className="flex flex-col items-center justify-evenly border w-[30%] border-black h-[60vh] rounded-xl">
               <h1 className="text-xl font-bold">Private</h1>
-              <div className="flex flex-col items-center justify-center gap-7 min-h-[180px]">
+              <div className="flex flex-col items-center gap-7 min-h-[180px]">
                 <div className="text-gray-400">
                   <span className="font-black text-black">One stop </span>
                   admin dashboard
@@ -51,7 +52,7 @@ const Dashboard: NextPage<DashboardProps> = ({}) => {
             {/* Right card */}
             <div className="flex flex-col items-center justify-evenly border w-[30%] h-[60vh] rounded-3xl border-black">
               <h1 className="text-xl font-bold">Public</h1>
-              <div className="flex flex-col items-center justify-center gap-7  min-h-[180px]">
+              <div className="flex flex-col items-center  gap-7  min-h-[180px]">
                 <div className="text-gray-400">
                   <span className="font-black text-black">One stop </span>
                   admin dashboard
@@ -75,11 +76,7 @@ const Dashboard: NextPage<DashboardProps> = ({}) => {
           </div>
         </div>
       )}
-      {createdEvent != null && (
-        <div>
-          <h1 className="py-10 text-3xl text-center">About my event</h1>
-        </div>
-      )}
+      {createdEvent != null && <AboutForm setCreatedEvent={setCreatedEvent} />}
     </div>
   )
 }
