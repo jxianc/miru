@@ -1,5 +1,5 @@
-import { UseGuards } from '@nestjs/common'
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { Inject, UseGuards } from '@nestjs/common'
+import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql'
 import { BaseResponse } from '../base/base.response'
 import { JwtGqlAuthGuard } from '../auth/guards/jwt.guard'
 import { OrganizerGuard } from '../auth/guards/organizer.guard'
@@ -13,10 +13,21 @@ import { LiveboardResponse } from './dto/liveboard.response'
 import { ParticipantAndOrganizerGuard } from '../auth/guards/participant-and-organizer.guard'
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
 import { User } from '@prisma/client'
+import { PubSubEngine } from 'graphql-subscriptions'
+import {
+  AnnouncementAction,
+  LiveboardPayload,
+  ParticipantStatus,
+} from './dto/liveboard.payload'
+
+const LIVEBOARD_UPDATED = 'liveboardUpdated'
 
 @Resolver()
 export class LiveboardResolver {
-  constructor(private readonly liveboardService: LiveboardService) {}
+  constructor(
+    private readonly liveboardService: LiveboardService,
+    @Inject('PUB_SUB') private pubsub: PubSubEngine,
+  ) {}
 
   // create announcement, publish events
   @UseGuards(JwtGqlAuthGuard, OrganizerGuard)
@@ -26,11 +37,27 @@ export class LiveboardResolver {
     @Args({ name: 'createAnnouncementInput' })
     createAnnouncementInput: CreateAnnouncementInput,
   ) {
-    // TODO publish events
-    return await this.liveboardService.createAnnouncement(
+    const response = await this.liveboardService.createAnnouncement(
       eventId,
       createAnnouncementInput,
     )
+
+    if (response.success && response.announcement) {
+      // publish new created announcement
+      const payload: LiveboardPayload = {
+        eventId,
+        payload: {
+          action: AnnouncementAction.CREATE,
+          announcement: response.announcement,
+        },
+      }
+
+      this.pubsub.publish(LIVEBOARD_UPDATED, {
+        liveboardUpdated: payload,
+      })
+    }
+
+    return response
   }
 
   // update announcement, publish events
@@ -41,11 +68,28 @@ export class LiveboardResolver {
     @Args({ name: 'updateAnnouncementInput' })
     updateAnnouncementInput: UpdateAnnouncementInput,
   ) {
-    // TODO publish event
-    return await this.liveboardService.updateAnnouncement(
+    const response = await this.liveboardService.updateAnnouncement(
       eventId,
       updateAnnouncementInput,
     )
+
+    if (response.success && response.announcement) {
+      // publish new updated announcement
+      const payload: LiveboardPayload = {
+        eventId,
+        payload: {
+          action: AnnouncementAction.UPDATE,
+          announcement: response.announcement,
+        },
+      }
+
+      console.log('publishing', payload)
+      this.pubsub.publish(LIVEBOARD_UPDATED, {
+        liveboardUpdated: payload,
+      })
+    }
+
+    return response
   }
 
   // remove announcement, publish events
@@ -55,11 +99,26 @@ export class LiveboardResolver {
     @Args({ name: 'eventId' }) eventId: string,
     @Args({ name: 'announcementId' }) announcementId: number,
   ) {
-    // TODO publish event
-    return await this.liveboardService.removeAnnouncement(
+    const response = await this.liveboardService.removeAnnouncement(
       eventId,
       announcementId,
     )
+
+    if (response.success) {
+      // publish new removed announcement
+      const payload: LiveboardPayload = {
+        eventId,
+        payload: {
+          announcementId,
+        },
+      }
+
+      this.pubsub.publish(LIVEBOARD_UPDATED, {
+        liveboardUpdated: payload,
+      })
+    }
+
+    return response
   }
 
   // take attendance, publish events
@@ -69,8 +128,24 @@ export class LiveboardResolver {
     @Args({ name: 'eventId' }) eventId: string,
     @CurrentUser() user: User,
   ) {
-    // TODO publish event
-    return await this.liveboardService.attendEvent(user.id, eventId)
+    const response = await this.liveboardService.attendEvent(user.id, eventId)
+
+    if (response.success) {
+      // publish new attended participant
+      const payload: LiveboardPayload = {
+        eventId,
+        payload: {
+          userId: user.id,
+          status: ParticipantStatus.ATTEND,
+        },
+      }
+
+      this.pubsub.publish(LIVEBOARD_UPDATED, {
+        liveboardUpdated: payload,
+      })
+    }
+
+    return response
   }
 
   // quit event, publish events
@@ -80,15 +155,41 @@ export class LiveboardResolver {
     @Args({ name: 'eventId' }) eventId: string,
     @CurrentUser() user: User,
   ) {
-    // TODO publish event
-    return await this.liveboardService.quitEvent(user.id, eventId)
+    const response = await this.liveboardService.quitEvent(user.id, eventId)
+
+    if (response.success) {
+      // publish quit participant
+      const payload: LiveboardPayload = {
+        eventId,
+        payload: {
+          userId: user.id,
+          status: ParticipantStatus.QUIT,
+        },
+      }
+
+      this.pubsub.publish(LIVEBOARD_UPDATED, {
+        liveboardUpdated: payload,
+      })
+    }
+
+    return response
   }
 
-  // get liveboard, subcribe to events
+  // get liveboard
   @UseGuards(JwtGqlAuthGuard, ParticipantAndOrganizerGuard)
   @Query(() => LiveboardResponse)
   async getLiveboard(@Args({ name: 'eventId' }) eventId: string) {
-    // TODO subscribe events
     return await this.liveboardService.getLiveboardData(eventId)
+  }
+
+  @UseGuards(JwtGqlAuthGuard, ParticipantAndOrganizerGuard)
+  @Subscription(() => LiveboardPayload, {
+    name: 'liveboardUpdated',
+    filter: (payload, variables) => {
+      return payload.liveboardUpdated.eventId === variables.eventId
+    },
+  })
+  subscribeToLiveboardUpdated(@Args({ name: 'eventId' }) eventId: string) {
+    return this.pubsub.asyncIterator(LIVEBOARD_UPDATED)
   }
 }
