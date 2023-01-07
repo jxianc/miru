@@ -13,7 +13,7 @@ export default function Web() {
   useEffect(() => {
     if (meData?.me) {
       setCurrUser(meData.me)
-      router.push(`/dashboard/${meData.me.id}`)
+      router.push(`/create`)
     }
   }, [meData, setCurrUser])
 

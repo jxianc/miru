@@ -1,19 +1,18 @@
-import { exec } from 'child_process'
 import { useAtom } from 'jotai'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import { AboutForm } from '../../components/AboutForm'
-import Navbar from '../../components/Navbar'
-import { useMeQuery } from '../../generated/graphql'
-import { setCurrUserAtom } from '../../libs/atom/current-user.atom'
-import { navbarStatusAtom } from '../../libs/atom/navbar.atom'
+import { useState, useEffect } from 'react'
+import { AboutForm } from '../components/AboutForm'
+import Navbar from '../components/Navbar'
+import { useMeQuery } from '../generated/graphql'
+import { setCurrUserAtom } from '../libs/atom/current-user.atom'
+import { navbarStatusAtom } from '../libs/atom/navbar.atom'
 
-interface DashboardProps {}
+interface CreateProps {}
 
 type createdEvent = 'private' | 'public' | null
 
-const Dashboard: NextPage<DashboardProps> = ({}) => {
+const Create: NextPage<CreateProps> = ({}) => {
   // atom
   const [navbarStatus] = useAtom(navbarStatusAtom)
   const [currUser, setCurrUser] = useAtom(setCurrUserAtom)
@@ -114,4 +113,4 @@ const Dashboard: NextPage<DashboardProps> = ({}) => {
   )
 }
 
-export default Dashboard
+export default Create
