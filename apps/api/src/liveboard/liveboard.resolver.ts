@@ -17,7 +17,7 @@ import { PubSubEngine } from 'graphql-subscriptions'
 import {
   AnnouncementAction,
   LiveboardPayload,
-  ParticipantStatus,
+  ParticipantAction,
 } from './dto/liveboard.payload'
 
 const LIVEBOARD_UPDATED = 'liveboardUpdated'
@@ -136,7 +136,7 @@ export class LiveboardResolver {
         eventId,
         payload: {
           userId: user.id,
-          status: ParticipantStatus.ATTEND,
+          action: ParticipantAction.ATTEND,
         },
       }
 
@@ -163,7 +163,7 @@ export class LiveboardResolver {
         eventId,
         payload: {
           userId: user.id,
-          status: ParticipantStatus.QUIT,
+          action: ParticipantAction.QUIT,
         },
       }
 

@@ -22,8 +22,8 @@ type AnnouncementRemoved {
 }
 
 type AnnouncementUpdated {
-  action: AnnouncementAction!
   announcement: Announcement!
+  announcementAction: AnnouncementAction!
 }
 
 type AuthResponse {
@@ -148,13 +148,13 @@ type Mutation {
   updateForm(createFormKeyInputs: [CreateFormKeyInput!], eventId: String!, removeFormKeyInputs: [Int!], updateFormKeyInputs: [UpdateFormKeyInput!]): UpdateFormResponse!
 }
 
-enum ParticipantStatus {
+enum ParticipantAction {
   ATTEND
   QUIT
 }
 
 type ParticipantUpdated {
-  status: ParticipantStatus!
+  participantAction: ParticipantAction!
   userId: String!
 }
 

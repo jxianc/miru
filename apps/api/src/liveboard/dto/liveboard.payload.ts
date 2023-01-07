@@ -8,27 +8,44 @@ import {
 import { Announcement } from '@prisma/client'
 import { Announcement as AnnouncementEntity } from '../entities/announcement.entity'
 
-/**
- * two types of payload
- *  - for announcments
- *    - create/update announcement -> return announcement entity
- *    - remove announcment -> announcement id
- *  - for participants
- *    - attend -> return userId
- *    - quit -> return userId
- */
+@ObjectType()
+class LiveboardPayload {
+  @Field()
+  eventId!: string
 
-export enum AnnouncementAction {
-  CREATE,
-  UPDATE,
+  @Field(() => Payload)
+  payload!: typeof Payload
+}
+
+const Payload = createUnionType({
+  name: 'Payload',
+  types: () =>
+    [AnnouncementUpdated, AnnouncementRemoved, ParticipantUpdated] as const,
+  resolveType(value) {
+    if (value.action) {
+      return AnnouncementUpdated
+    }
+    if (value.announcementId) {
+      return AnnouncementRemoved
+    }
+    if (value.userId) {
+      return ParticipantUpdated
+    }
+    return null
+  },
+})
+
+enum AnnouncementAction {
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
 }
 registerEnumType(AnnouncementAction, {
   name: 'AnnouncementAction',
 })
 
 @ObjectType()
-export class AnnouncementUpdated {
-  @Field(() => AnnouncementAction)
+class AnnouncementUpdated {
+  @Field(() => AnnouncementAction, { name: 'announcementAction' })
   action!: AnnouncementAction
 
   @Field(() => AnnouncementEntity)
@@ -36,51 +53,26 @@ export class AnnouncementUpdated {
 }
 
 @ObjectType()
-export class AnnouncementRemoved {
+class AnnouncementRemoved {
   @Field(() => Int)
   announcementId!: number
 }
 
-export enum ParticipantStatus {
-  ATTEND,
-  QUIT,
+enum ParticipantAction {
+  ATTEND = 'ATTEND',
+  QUIT = 'QUIT',
 }
-
-registerEnumType(ParticipantStatus, {
-  name: 'ParticipantStatus',
+registerEnumType(ParticipantAction, {
+  name: 'ParticipantAction',
 })
 
 @ObjectType()
-export class ParticipantUpdated {
+class ParticipantUpdated {
   @Field()
   userId!: string
 
-  @Field(() => ParticipantStatus)
-  status!: ParticipantStatus
+  @Field(() => ParticipantAction, { name: 'participantAction' })
+  action!: ParticipantAction
 }
 
-export const Payload = createUnionType({
-  name: 'Payload',
-  types: () =>
-    [AnnouncementUpdated, AnnouncementRemoved, ParticipantUpdated] as const,
-  resolveType(value) {
-    if (value.action) {
-      return AnnouncementUpdated
-    } else if (value.announcementId) {
-      return AnnouncementRemoved
-    } else if (value.userId) {
-      return ParticipantUpdated
-    } else {
-      return null
-    }
-  },
-})
-
-@ObjectType()
-export class LiveboardPayload {
-  @Field()
-  eventId!: string
-
-  @Field(() => Payload)
-  payload!: typeof Payload
-}
+export { LiveboardPayload, AnnouncementAction, ParticipantAction }
