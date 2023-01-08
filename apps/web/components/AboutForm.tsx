@@ -2,12 +2,15 @@ import React from 'react'
 import { Formik, Field, Form, FieldProps } from 'formik'
 import * as Yup from 'yup'
 import { FormField } from './form/FormField'
+import { useCreateEventMutation } from '../generated/graphql'
 
 interface AboutFormProps {
   setCreatedEvent: Function
 }
 
 export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
+  const [_data, createEvent] = useCreateEventMutation()
+
   return (
     <div>
       <h1 className="py-10 text-3xl text-center">About my event...</h1>
@@ -31,12 +34,40 @@ export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
           maxAttendance: Yup.string().required('This field is required.'),
           max: Yup.number(),
         })}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            // Data is collected here.
-            alert(JSON.stringify(values, null, 2))
-            setSubmitting(false)
-          }, 400)
+        onSubmit={async ({
+          title,
+          description,
+          location,
+          max,
+          maxAttendance,
+          date,
+          time,
+        }) => {
+          const startDate = new Date(date + 'T' + time).toISOString()
+          const { data, error } = await createEvent({
+            createEventInput: {
+              title,
+              description,
+              location,
+              maximumAttendance: maxAttendance ? max : undefined,
+              startDate,
+            },
+          })
+
+          if (error || (data && !data.createEvent.success)) {
+            // failed to create event
+            // TODO: display failed to create event message to user, and let user to try again
+            console.log('failed')
+            console.log('graphql operation error', error)
+            console.log('error message', data?.createEvent.errMsg)
+          }
+
+          if (data?.createEvent.success) {
+            // create event successfully
+            // TODO: navigate to manage page
+            console.log('success')
+            console.log(data.createEvent.event)
+          }
         }}
       >
         {({ values }) => (
