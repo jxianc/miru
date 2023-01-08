@@ -60,7 +60,7 @@ export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
                   <ErrorMessage
                     component="span"
                     name="title"
-                    className="absolute bottom-0 left-0 text-red-500 translate-y-7"
+                    className="absolute bottom-0 left-0 text-red-500 whitespace-nowrap translate-y-7"
                   />
                 </div>
                 <div className="relative flex flex-col flex-1 ">
@@ -77,7 +77,7 @@ export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
                   <ErrorMessage
                     name="description"
                     component="span"
-                    className="absolute bottom-0 left-0 text-red-500 translate-y-7"
+                    className="absolute bottom-0 left-0 text-red-500 whitespace-nowrap translate-y-7"
                   />
                 </div>
               </div>
@@ -95,7 +95,7 @@ export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
                   <ErrorMessage
                     component="span"
                     name="location"
-                    className="absolute bottom-0 left-0 text-red-500 translate-y-7"
+                    className="absolute bottom-0 left-0 text-red-500 whitespace-nowrap translate-y-7"
                   />
                 </div>
 
@@ -109,7 +109,7 @@ export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
                   <ErrorMessage
                     component="span"
                     name="date"
-                    className="absolute bottom-0 left-0 text-red-500 translate-y-7"
+                    className="absolute bottom-0 left-0 text-red-500 whitespace-nowrap translate-y-7"
                   />
                 </div>
 
@@ -123,12 +123,12 @@ export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
                   <ErrorMessage
                     component="span"
                     name="time"
-                    className="absolute bottom-0 left-0 text-red-500 translate-y-7"
+                    className="absolute bottom-0 left-0 text-red-500 whitespace-nowrap translate-y-7"
                   />
                 </div>
 
                 <div className="relative flex flex-col md:min-h-[125px]">
-                  <p className="mb-1">Maximum Attendance</p>
+                  <p className="mb-1 whitespace-nowrap">Maximum Attendance</p>
 
                   <Field
                     name="maxAttendance"

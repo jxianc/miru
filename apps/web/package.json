@@ -10,6 +10,7 @@
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.13",
     "@mr/ui": "workspace:*",
     "@next/env": "^13.1.1",
     "@urql/core": "^3.1.1",
@@ -18,15 +19,15 @@
     "flowbite": "^1.5.5",
     "flowbite-react": "^0.3.7",
     "formik": "^2.2.9",
-    "jotai": "^1.12.1",
     "graphql": "^16.6.0",
+    "jotai": "^1.12.1",
     "jwt-decode": "^3.1.2",
     "next": "13.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.7.1",
-    "yup": "^0.32.11",
-    "urql": "^3.0.3"
+    "urql": "^3.0.3",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
