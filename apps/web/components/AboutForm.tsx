@@ -5,12 +5,16 @@ import { FormField } from './form/FormField'
 import { useCreateEventMutation } from '../generated/graphql'
 import { toast } from 'react-hot-toast'
 import { useRouter } from 'next/router'
+import { useAtom } from 'jotai'
+import { setNavbarStatusAtom } from '../libs/atom/navbar.atom'
 
 interface AboutFormProps {
   setCreatedEvent: Function
 }
 
 export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
+  const [navbarStatus, setNavbarStatus] = useAtom(setNavbarStatusAtom)
+
   const [_data, createEvent] = useCreateEventMutation()
   const router = useRouter()
 
@@ -47,6 +51,8 @@ export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
           time,
         }) => {
           const startDate = new Date(date + 'T' + time).toISOString()
+          const toastId = toast.loading('Creating Event...')
+
           const { data, error } = await createEvent({
             createEventInput: {
               title,
@@ -65,8 +71,11 @@ export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
 
           if (data?.createEvent.success) {
             // create event successfully
-            toast.success('Event is created successfully')
+            toast.success('Event is created successfully', {
+              id: toastId,
+            })
             router.push('/manage')
+            setNavbarStatus('manage')
           }
         }}
       >

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Event } from '../generated/graphql'
+import { formatDate } from '../libs/formatDate'
 
 interface AdminDashboardProps {
   event: Event
@@ -7,6 +8,8 @@ interface AdminDashboardProps {
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ event }) => {
   const { title, startDate, location, description } = event
+  const { date, time } = formatDate(new Date(startDate))
+  console.log(date)
 
   return (
     <div className="flex flex-col">
@@ -20,11 +23,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ event }) => {
         <div className="flex items-center gap-12">
           <div>
             <div className="text-sm">Date</div>
-            <div className="text-lg font-bold">{startDate}</div>
+            <div className="text-lg font-bold">{date}</div>
           </div>
           <div>
             <div className="text-sm">Time</div>
-            <div className="text-lg font-bold">{startDate}</div>
+            <div className="text-lg font-bold">{time}</div>
           </div>
           <div>
             <div className="text-sm">Location</div>
