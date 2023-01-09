@@ -40,7 +40,18 @@ const Manage: NextPage<ManageProps> = ({}) => {
     }
 
     if (eventsOrganized?.getEventsOrganized) {
-      setEventList(eventsOrganized.getEventsOrganized)
+      setEventList(
+        eventsOrganized.getEventsOrganized.sort((a, b) => {
+          const dateA = a.createdAt
+          const dateB = b.createdAt
+          if (dateA > dateB) {
+            return -1
+          }
+          if (dateA < dateB) {
+            return 1
+          }
+        }),
+      )
     }
   }, [meData, eventsOrganized])
 
@@ -63,10 +74,10 @@ const Manage: NextPage<ManageProps> = ({}) => {
                   <div className="col-span-1 pr-5 border-r border-gray-200">
                     <EventList
                       setCurrEventIndex={setCurrEventIndex}
+                      currEventIndex={currEventIndex}
                       eventTitle={eventList.map((e, idx) => ({
                         idx,
                         title: e.title,
-                        createdAt: e.createdAt,
                       }))}
                     />
                   </div>
