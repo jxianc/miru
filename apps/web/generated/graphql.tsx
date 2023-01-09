@@ -102,7 +102,7 @@ export type Event = {
   createdAt: Scalars['DateTime']
   description: Scalars['String']
   endDate?: Maybe<Scalars['DateTime']>
-  form: Form
+  form?: Maybe<Form>
   id: Scalars['String']
   image?: Maybe<Scalars['String']>
   location: Scalars['String']
@@ -353,6 +353,19 @@ export type UserParticipateEvent = {
   userForm: UserForm
 }
 
+export type BaseEventFragment = {
+  __typename?: 'Event'
+  id: string
+  title: string
+  description: string
+  location: string
+  startDate: any
+  endDate?: any | null
+  maximumAttendance?: number | null
+  createdAt: any
+  updatedAt: any
+}
+
 export type CreateEventMutationVariables = Exact<{
   createEventInput: CreateEventInput
 }>
@@ -379,7 +392,7 @@ export type CreateEventMutation = {
         id: string
         name?: string | null
       }> | null
-      form: {
+      form?: {
         __typename?: 'Form'
         createdAt: any
         updatedAt: any
@@ -388,7 +401,7 @@ export type CreateEventMutation = {
           id: number
           label: string
         }> | null
-      }
+      } | null
     }
   }
 }
@@ -403,6 +416,24 @@ export type RefreshTokenMutation = {
     errMsg?: string | null
     success: boolean
   }
+}
+
+export type GetEventsOrganizedQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetEventsOrganizedQuery = {
+  __typename?: 'Query'
+  getEventsOrganized: Array<{
+    __typename?: 'Event'
+    id: string
+    title: string
+    description: string
+    location: string
+    startDate: any
+    endDate?: any | null
+    maximumAttendance?: number | null
+    createdAt: any
+    updatedAt: any
+  }>
 }
 
 export type HelloQueryVariables = Exact<{ [key: string]: never }>
@@ -424,21 +455,26 @@ export type MeQuery = {
   }
 }
 
+export const BaseEventFragmentDoc = gql`
+  fragment BaseEvent on Event {
+    id
+    title
+    description
+    location
+    startDate
+    endDate
+    maximumAttendance
+    createdAt
+    updatedAt
+  }
+`
 export const CreateEventDocument = gql`
   mutation CreateEvent($createEventInput: CreateEventInput!) {
     createEvent(createEventInput: $createEventInput) {
       errMsg
       success
       event {
-        id
-        title
-        description
-        location
-        startDate
-        endDate
-        maximumAttendance
-        createdAt
-        updatedAt
+        ...BaseEvent
         organizers {
           id
           name
@@ -454,6 +490,7 @@ export const CreateEventDocument = gql`
       }
     }
   }
+  ${BaseEventFragmentDoc}
 `
 
 export function useCreateEventMutation() {
@@ -475,6 +512,23 @@ export function useRefreshTokenMutation() {
   return Urql.useMutation<RefreshTokenMutation, RefreshTokenMutationVariables>(
     RefreshTokenDocument,
   )
+}
+export const GetEventsOrganizedDocument = gql`
+  query GetEventsOrganized {
+    getEventsOrganized {
+      ...BaseEvent
+    }
+  }
+  ${BaseEventFragmentDoc}
+`
+
+export function useGetEventsOrganizedQuery(
+  options?: Omit<Urql.UseQueryArgs<GetEventsOrganizedQueryVariables>, 'query'>,
+) {
+  return Urql.useQuery<
+    GetEventsOrganizedQuery,
+    GetEventsOrganizedQueryVariables
+  >({ query: GetEventsOrganizedDocument, ...options })
 }
 export const HelloDocument = gql`
   query Hello {

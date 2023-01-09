@@ -32,8 +32,8 @@ export class Event extends BaseEntity {
   @Field(() => Date, { nullable: true })
   endDate?: Date
 
-  @Field(() => FormEntity)
-  form!: Form
+  @Field(() => FormEntity, { nullable: true })
+  form?: Form
 
   @Field(() => [UserEntity], { nullable: true })
   organizers?: User[]

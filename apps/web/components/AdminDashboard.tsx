@@ -1,49 +1,37 @@
 import React from 'react'
-
-type EventDetail = {
-  type: string
-  school: string
-  title: string
-  description: string
-  date: string
-  time: string
-  location: string
-  signup: number
-}
+import { Event } from '../generated/graphql'
 
 interface AdminDashboardProps {
-  eventDetail: EventDetail
+  event: Event
 }
 
-export const AdminDashboard: React.FC<AdminDashboardProps> = ({
-  eventDetail,
-}) => {
+export const AdminDashboard: React.FC<AdminDashboardProps> = ({ event }) => {
+  const { title, startDate, location, description } = event
+
   return (
     <div className="flex flex-col">
       {/* Category and School */}
-      <div className="text-sm text-slate-400">
-        {eventDetail.type} Event . {eventDetail.school}
-      </div>
+      <div className="text-sm text-slate-400">Public Event</div>
 
       {/* Event Title */}
-      <div className="my-2 text-3xl font-bold">{eventDetail.title}</div>
+      <div className="my-2 text-3xl font-bold">{title}</div>
       {/* Event Detail */}
       <div className="flex flex-col gap-5 p-5 mt-2 border border-gray-300 rounded-lg">
         <div className="flex items-center gap-12">
           <div>
             <div className="text-sm">Date</div>
-            <div className="text-lg font-bold">{eventDetail.date}</div>
+            <div className="text-lg font-bold">{startDate}</div>
           </div>
           <div>
             <div className="text-sm">Time</div>
-            <div className="text-lg font-bold">{eventDetail.time}</div>
+            <div className="text-lg font-bold">{startDate}</div>
           </div>
           <div>
             <div className="text-sm">Location</div>
-            <div className="text-lg font-bold ">{eventDetail.location}</div>
+            <div className="text-lg font-bold ">{location}</div>
           </div>
         </div>
-        <div className="line-clamp-3">{eventDetail.description}</div>
+        <div className="line-clamp-3">{description}</div>
         <button className="self-end p-2 text-xs duration-200 ease-in-out border border-gray-300 w-36 rounded-xl hover:bg-black hover:text-white">
           Edit details
         </button>
@@ -92,7 +80,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </div>
           <div className="flex flex-col items-end gap-2">
             <div className="text-xs">Registered Participants</div>
-            <div className="text-5xl font-extrabold">{eventDetail.signup}</div>
+            <div className="text-5xl font-extrabold">69</div>
           </div>
         </div>
       </div>

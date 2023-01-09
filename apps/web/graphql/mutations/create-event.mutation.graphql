@@ -3,15 +3,7 @@ mutation CreateEvent($createEventInput: CreateEventInput!) {
     errMsg
     success
     event {
-      id
-      title
-      description
-      location
-      startDate
-      endDate
-      maximumAttendance
-      createdAt
-      updatedAt
+      ...BaseEvent
       organizers {
         id
         name

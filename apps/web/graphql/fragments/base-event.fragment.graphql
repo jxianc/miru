@@ -1,0 +1,11 @@
+fragment BaseEvent on Event {
+  id
+  title
+  description
+  location
+  startDate
+  endDate
+  maximumAttendance
+  createdAt
+  updatedAt
+}

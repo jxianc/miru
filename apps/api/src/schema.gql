@@ -79,7 +79,7 @@ type Event {
   createdAt: DateTime!
   description: String!
   endDate: DateTime
-  form: Form!
+  form: Form
   id: String!
   image: String
   location: String!
