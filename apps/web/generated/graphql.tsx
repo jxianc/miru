@@ -33,6 +33,22 @@ export type Announcement = {
   updatedAt: Scalars['DateTime']
 }
 
+export enum AnnouncementAction {
+  Create = 'CREATE',
+  Update = 'UPDATE',
+}
+
+export type AnnouncementRemoved = {
+  __typename?: 'AnnouncementRemoved'
+  announcementId: Scalars['Int']
+}
+
+export type AnnouncementUpdated = {
+  __typename?: 'AnnouncementUpdated'
+  announcement: Announcement
+  announcementAction: AnnouncementAction
+}
+
 export type AuthResponse = {
   __typename?: 'AuthResponse'
   accessToken?: Maybe<Scalars['String']>
@@ -133,6 +149,12 @@ export type Liveboard = {
   participants?: Maybe<Array<UserParticipateEvent>>
 }
 
+export type LiveboardPayload = {
+  __typename?: 'LiveboardPayload'
+  eventId: Scalars['String']
+  payload: Payload
+}
+
 export type LiveboardResponse = {
   __typename?: 'LiveboardResponse'
   errMsg?: Maybe<Scalars['String']>
@@ -209,6 +231,22 @@ export type MutationUpdateFormArgs = {
   updateFormKeyInputs?: InputMaybe<Array<UpdateFormKeyInput>>
 }
 
+export enum ParticipantAction {
+  Attend = 'ATTEND',
+  Quit = 'QUIT',
+}
+
+export type ParticipantUpdated = {
+  __typename?: 'ParticipantUpdated'
+  participantAction: ParticipantAction
+  userId: Scalars['String']
+}
+
+export type Payload =
+  | AnnouncementRemoved
+  | AnnouncementUpdated
+  | ParticipantUpdated
+
 export type Query = {
   __typename?: 'Query'
   getEvent: Event
@@ -229,6 +267,15 @@ export type QueryGetFormArgs = {
 }
 
 export type QueryGetLiveboardArgs = {
+  eventId: Scalars['String']
+}
+
+export type Subscription = {
+  __typename?: 'Subscription'
+  liveboardUpdated: LiveboardPayload
+}
+
+export type SubscriptionLiveboardUpdatedArgs = {
   eventId: Scalars['String']
 }
 
@@ -306,6 +353,46 @@ export type UserParticipateEvent = {
   userForm: UserForm
 }
 
+export type CreateEventMutationVariables = Exact<{
+  createEventInput: CreateEventInput
+}>
+
+export type CreateEventMutation = {
+  __typename?: 'Mutation'
+  createEvent: {
+    __typename?: 'CreateEventResponse'
+    errMsg?: string | null
+    success: boolean
+    event: {
+      __typename?: 'Event'
+      id: string
+      title: string
+      description: string
+      location: string
+      startDate: any
+      endDate?: any | null
+      maximumAttendance?: number | null
+      createdAt: any
+      updatedAt: any
+      organizers?: Array<{
+        __typename?: 'User'
+        id: string
+        name?: string | null
+      }> | null
+      form: {
+        __typename?: 'Form'
+        createdAt: any
+        updatedAt: any
+        formKeys?: Array<{
+          __typename?: 'FormKey'
+          id: number
+          label: string
+        }> | null
+      }
+    }
+  }
+}
+
 export type RefreshTokenMutationVariables = Exact<{ [key: string]: never }>
 
 export type RefreshTokenMutation = {
@@ -337,6 +424,43 @@ export type MeQuery = {
   }
 }
 
+export const CreateEventDocument = gql`
+  mutation CreateEvent($createEventInput: CreateEventInput!) {
+    createEvent(createEventInput: $createEventInput) {
+      errMsg
+      success
+      event {
+        id
+        title
+        description
+        location
+        startDate
+        endDate
+        maximumAttendance
+        createdAt
+        updatedAt
+        organizers {
+          id
+          name
+        }
+        form {
+          formKeys {
+            id
+            label
+          }
+          createdAt
+          updatedAt
+        }
+      }
+    }
+  }
+`
+
+export function useCreateEventMutation() {
+  return Urql.useMutation<CreateEventMutation, CreateEventMutationVariables>(
+    CreateEventDocument,
+  )
+}
 export const RefreshTokenDocument = gql`
   mutation RefreshToken {
     refreshToken {

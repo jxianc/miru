@@ -1,0 +1,29 @@
+mutation CreateEvent($createEventInput: CreateEventInput!) {
+  createEvent(createEventInput: $createEventInput) {
+    errMsg
+    success
+    event {
+      id
+      title
+      description
+      location
+      startDate
+      endDate
+      maximumAttendance
+      createdAt
+      updatedAt
+      organizers {
+        id
+        name
+      }
+      form {
+        formKeys {
+          id
+          label
+        }
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}
