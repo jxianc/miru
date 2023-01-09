@@ -66,6 +66,7 @@ const Manage: NextPage<ManageProps> = ({}) => {
                       eventTitle={eventList.map((e, idx) => ({
                         idx,
                         title: e.title,
+                        createdAt: e.createdAt,
                       }))}
                     />
                   </div>

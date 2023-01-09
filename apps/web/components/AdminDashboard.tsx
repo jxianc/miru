@@ -9,7 +9,6 @@ interface AdminDashboardProps {
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ event }) => {
   const { title, startDate, location, description } = event
   const { date, time } = formatDate(new Date(startDate))
-  console.log(date)
 
   return (
     <div className="flex flex-col">
@@ -76,7 +75,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ event }) => {
         {/* Feedback */}
         <div className="flex flex-col justify-between p-5 border border-gray-300 rounded-lg cursor-pointer">
           <div>
-            <div className="mb-2 text-xl font-bold whitespace-nowrap">
+            <div className="mb-2 text-xl font-bold xl:whitespace-nowrap">
               Participants Collections
             </div>
             <div>You can view all the data collected here. </div>
