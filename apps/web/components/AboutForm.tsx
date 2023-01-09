@@ -3,6 +3,8 @@ import { Formik, Field, Form, FieldProps } from 'formik'
 import * as Yup from 'yup'
 import { FormField } from './form/FormField'
 import { useCreateEventMutation } from '../generated/graphql'
+import { toast } from 'react-hot-toast'
+import { useRouter } from 'next/router'
 
 interface AboutFormProps {
   setCreatedEvent: Function
@@ -10,6 +12,7 @@ interface AboutFormProps {
 
 export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
   const [_data, createEvent] = useCreateEventMutation()
+  const router = useRouter()
 
   return (
     <div>
@@ -56,17 +59,14 @@ export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
 
           if (error || (data && !data.createEvent.success)) {
             // failed to create event
-            // TODO: display failed to create event message to user, and let user to try again
-            console.log('failed')
-            console.log('graphql operation error', error)
-            console.log('error message', data?.createEvent.errMsg)
+            // TODO: add button to let user to try again (refresh?)
+            toast.error('Failed to create event')
           }
 
           if (data?.createEvent.success) {
             // create event successfully
-            // TODO: navigate to manage page
-            console.log('success')
-            console.log(data.createEvent.event)
+            toast.success('Event is created successfully')
+            router.push('/manage')
           }
         }}
       >
