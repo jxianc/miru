@@ -3,14 +3,17 @@ import Image from 'next/image'
 import { setNavbarStatusAtom, NavbarState } from '../libs/atom/navbar.atom'
 import { atom, useAtom } from 'jotai'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { useRouter } from 'next/router'
 interface NavbarProps {
   name: string
   image?: string
 }
 
 const Navbar: React.FC<NavbarProps> = ({ name, image }) => {
+  const router = useRouter()
   const [navbarStatus, setNavbarStatus] = useAtom(setNavbarStatusAtom)
   const [showMenu, setShowMenu] = useState(false)
+
   return (
     <div className="flex flex-col justify-between w-full p-5 border border-black md:items-center md:flex-row rounded-xl">
       {/* front part */}
@@ -33,7 +36,10 @@ const Navbar: React.FC<NavbarProps> = ({ name, image }) => {
           className={` md:inline  hover:cursor-pointer ${
             navbarStatus === 'create' && `underline underline-offset-8`
           } ${showMenu ? `inline mt-1` : `hidden`}`}
-          onClick={() => setNavbarStatus('create')}
+          onClick={() => {
+            setNavbarStatus('create')
+            router.push('/create')
+          }}
         >
           Create Event
         </div>
@@ -43,7 +49,10 @@ const Navbar: React.FC<NavbarProps> = ({ name, image }) => {
           } md:inline  hover:cursor-pointer ${
             navbarStatus === 'manage' && `underline underline-offset-8`
           } `}
-          onClick={() => setNavbarStatus('manage')}
+          onClick={() => {
+            setNavbarStatus('manage')
+            router.push('/manage')
+          }}
         >
           Manage My Event
         </div>
@@ -52,7 +61,10 @@ const Navbar: React.FC<NavbarProps> = ({ name, image }) => {
             navbarStatus === 'registered_event' &&
             `underline underline-offset-8`
           }  ${showMenu ? `inline` : `hidden`}`}
-          onClick={() => setNavbarStatus('registered_event')}
+          onClick={() => {
+            setNavbarStatus('registered_event')
+            router.push('/registered')
+          }}
         >
           Registered Event
         </div>
