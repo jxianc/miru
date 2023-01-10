@@ -46,8 +46,7 @@ const Manage: NextPage<ManageProps> = ({}) => {
           const dateB = b.createdAt
           if (dateA > dateB) {
             return -1
-          }
-          if (dateA < dateB) {
+          } else {
             return 1
           }
         }),
