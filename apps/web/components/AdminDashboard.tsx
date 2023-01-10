@@ -1,4 +1,6 @@
-import React from 'react'
+import { TrashIcon } from '@heroicons/react/24/outline'
+import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { Event } from '../generated/graphql'
 import { formatDate } from '../libs/formatDate'
 
@@ -6,17 +8,60 @@ interface AdminDashboardProps {
   event: Event
 }
 
+const onDeleteEvent = () => {
+  toast.custom(
+    (t) => (
+      <div
+        className={`${
+          t.visible ? 'animate-enter' : 'animate-leave'
+        } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex `}
+      >
+        <div className="flex-1 p-4">
+          <div className="flex items-start">
+            <div className="flex-1 ml-3">
+              <p className="text-xl font-medium text-gray-900 ">
+                Are you sure?
+              </p>
+              <p className="mt-1 text-gray-500">All data will be DELETED.</p>
+            </div>
+          </div>
+        </div>
+        <div className="flex border-l border-gray-200">
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="flex items-center justify-center w-full p-4 text-sm font-medium text-indigo-600 border border-transparent rounded-none rounded-r-lg hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            Delete!
+          </button>
+        </div>
+      </div>
+    ),
+    { position: 'bottom-right' },
+  )
+}
+
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ event }) => {
   const { title, startDate, location, description } = event
   const { date, time } = formatDate(new Date(startDate))
-
+  const [toDelete, setToDelete] = useState(false)
   return (
     <div className="flex flex-col">
       {/* Category and School */}
       <div className="text-sm text-slate-400">Public Event</div>
 
       {/* Event Title */}
-      <div className="my-2 text-3xl font-bold">{title}</div>
+      <div className="flex justify-between">
+        <div className="my-2 text-3xl font-bold">{title}</div>
+        <button
+          onClick={() => onDeleteEvent()}
+          className="grid px-3 my-1 text-white bg-red-600 border rounded-lg place-content-center hover:opacity-90"
+        >
+          <div className="flex items-center justify-center gap-2">
+            <div>Delete event</div>
+            <TrashIcon width={20} height={20} />
+          </div>
+        </button>
+      </div>
       {/* Event Detail */}
       <div className="flex flex-col gap-5 p-5 mt-2 border border-gray-300 rounded-lg">
         <div className="flex items-center gap-12">
