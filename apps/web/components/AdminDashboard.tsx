@@ -14,9 +14,9 @@ const onDeleteEvent = () => {
       <div
         className={`${
           t.visible ? 'animate-enter' : 'animate-leave'
-        } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex `}
+        } max-w-md w-full h-full min-h-[100px] bg-white shadow-lg rounded-lg pointer-events-auto flex `}
       >
-        <div className="flex-1 p-4">
+        <div className="items-center flex-1 p-4">
           <div className="flex items-start">
             <div className="flex-1 ml-3">
               <p className="text-xl font-medium text-gray-900 ">
@@ -29,14 +29,14 @@ const onDeleteEvent = () => {
         <div className="flex border-l border-gray-200">
           <button
             onClick={() => toast.dismiss(t.id)}
-            className="flex items-center justify-center w-full p-4 text-sm font-medium text-indigo-600 border border-transparent rounded-none rounded-r-lg hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="flex items-center justify-center w-full p-4 text-sm font-medium text-red-400 border border-transparent rounded-none rounded-r-lg hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             Delete!
           </button>
         </div>
       </div>
     ),
-    { position: 'bottom-right' },
+    { position: 'top-right' },
   )
 }
 
