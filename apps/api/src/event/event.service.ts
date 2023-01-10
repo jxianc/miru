@@ -3,6 +3,7 @@ import { BaseResponse } from '../base/base.response'
 import { PrismaService } from '../prisma.service'
 import { CreateEventInput } from './dto/create-event.input'
 import { CreateEventResponse } from './dto/create-event.response'
+import { Event } from './entities/event.entity'
 import { UpdateEventInput } from './dto/update-event.input'
 import { UpdateEventResponse } from './dto/update-event.response'
 
@@ -147,7 +148,7 @@ export class EventService {
     return event
   }
 
-  async findEventsByOrganizerId(organizerId: string) {
+  async findEventsByOrganizerId(organizerId: string): Promise<Event[]> {
     // since this is called with auth guard
     // the user with the id is guaranteed exists
     const userWithEventOrganized = await this.prisma.user.findUnique({
@@ -155,12 +156,27 @@ export class EventService {
         id: organizerId,
       },
       include: {
-        eventOrganized: true,
+        eventOrganized: {
+          include: {
+            _count: {
+              select: {
+                participants: true,
+              },
+            },
+          },
+        },
       },
     })
 
     // return empty array instead of undefined
-    return userWithEventOrganized?.eventOrganized || []
+    return (
+      userWithEventOrganized?.eventOrganized.map((e) => {
+        return {
+          ...e,
+          participantsCount: e._count.participants,
+        }
+      }) || []
+    )
   }
 
   async findEventsByParticipantId(participantId: string) {

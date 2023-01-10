@@ -86,6 +86,7 @@ type Event {
   maximumAttendance: Int
   organizers: [User!]
   participants: [UserParticipateEvent!]
+  participantsCount: Int
   startDate: DateTime!
   title: String!
   updatedAt: DateTime!

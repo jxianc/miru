@@ -109,6 +109,7 @@ export type Event = {
   maximumAttendance?: Maybe<Scalars['Int']>
   organizers?: Maybe<Array<User>>
   participants?: Maybe<Array<UserParticipateEvent>>
+  participantsCount?: Maybe<Scalars['Int']>
   startDate: Scalars['DateTime']
   title: Scalars['String']
   updatedAt: Scalars['DateTime']
@@ -424,6 +425,7 @@ export type GetEventsOrganizedQuery = {
   __typename?: 'Query'
   getEventsOrganized: Array<{
     __typename?: 'Event'
+    participantsCount?: number | null
     id: string
     title: string
     description: string
@@ -517,6 +519,7 @@ export const GetEventsOrganizedDocument = gql`
   query GetEventsOrganized {
     getEventsOrganized {
       ...BaseEvent
+      participantsCount
     }
   }
   ${BaseEventFragmentDoc}

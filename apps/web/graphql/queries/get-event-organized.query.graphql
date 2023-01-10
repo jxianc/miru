@@ -1,5 +1,6 @@
 query GetEventsOrganized {
   getEventsOrganized {
     ...BaseEvent
+    participantsCount
   }
 }

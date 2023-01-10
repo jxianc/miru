@@ -41,7 +41,7 @@ const onDeleteEvent = () => {
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ event }) => {
-  const { title, startDate, location, description } = event
+  const { title, startDate, location, description, participantsCount } = event
   const { date, time } = formatDate(new Date(startDate))
   const [toDelete, setToDelete] = useState(false)
   return (
@@ -127,7 +127,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ event }) => {
           </div>
           <div className="flex flex-col items-end gap-2">
             <div className="text-xs">Registered Participants</div>
-            <div className="text-5xl font-extrabold">69</div>
+            <div className="text-5xl font-extrabold">{participantsCount}</div>
           </div>
         </div>
       </div>
