@@ -41,7 +41,15 @@ const onDeleteEvent = () => {
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ event }) => {
-  const { title, startDate, location, description, participantsCount } = event
+  const {
+    title,
+    startDate,
+    location,
+    description,
+    participantsCount,
+    feedbacksCount,
+    averageRating,
+  } = event
   const { date, time } = formatDate(new Date(startDate))
   const [toDelete, setToDelete] = useState(false)
   return (
@@ -134,11 +142,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ event }) => {
       <div className="flex justify-between p-5 mt-5 border border-gray-300 rounded-lg cursor-pointer">
         <div>
           <div className="mb-2 text-xl font-bold">Feedback</div>
-          <div>You can view all 6 feedback here.</div>
+          <div>You can view all {feedbacksCount || 0} feedback here.</div>
         </div>
         <div className="flex flex-col items-end gap-2">
           <div className="text-xs">avg. rating</div>
-          <div className="text-5xl font-extrabold">3.5</div>
+          <div className="text-5xl font-extrabold">{averageRating || 0}</div>
         </div>
       </div>
     </div>

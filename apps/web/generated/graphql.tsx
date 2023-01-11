@@ -99,9 +99,11 @@ export type CreateFormKeyInput = {
 export type Event = {
   __typename?: 'Event'
   announcements?: Maybe<Array<Announcement>>
+  averageRating?: Maybe<Scalars['Int']>
   createdAt: Scalars['DateTime']
   description: Scalars['String']
   endDate?: Maybe<Scalars['DateTime']>
+  feedbacksCount?: Maybe<Scalars['Int']>
   form?: Maybe<Form>
   id: Scalars['String']
   image?: Maybe<Scalars['String']>
@@ -349,7 +351,7 @@ export type UserParticipateEvent = {
   event: Event
   feedback?: Maybe<Scalars['String']>
   isArrived: Scalars['Boolean']
-  rating: Scalars['Float']
+  rating?: Maybe<Scalars['Int']>
   user: User
   userForm: UserForm
 }
@@ -426,6 +428,8 @@ export type GetEventsOrganizedQuery = {
   getEventsOrganized: Array<{
     __typename?: 'Event'
     participantsCount?: number | null
+    averageRating?: number | null
+    feedbacksCount?: number | null
     id: string
     title: string
     description: string
@@ -520,6 +524,8 @@ export const GetEventsOrganizedDocument = gql`
     getEventsOrganized {
       ...BaseEvent
       participantsCount
+      averageRating
+      feedbacksCount
     }
   }
   ${BaseEventFragmentDoc}

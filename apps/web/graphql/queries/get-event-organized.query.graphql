@@ -2,5 +2,7 @@ query GetEventsOrganized {
   getEventsOrganized {
     ...BaseEvent
     participantsCount
+    averageRating
+    feedbacksCount
   }
 }
