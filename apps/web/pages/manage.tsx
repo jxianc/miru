@@ -5,18 +5,15 @@ import { useEffect, useState } from 'react'
 import { AdminDashboard } from '../components/AdminDashboard'
 import { EventList } from '../components/EventList'
 import Navbar from '../components/Navbar'
-import {
-  Event,
-  useGetEventsOrganizedQuery,
-  useMeQuery,
-} from '../generated/graphql'
+import { Event, useGetEventsOrganizedQuery } from '../generated/graphql'
 import { setCurrUserAtom } from '../libs/atom/current-user.atom'
+import { useMe } from '../libs/hooks/use-me'
 
 interface ManageProps {}
 
 const Manage: NextPage<ManageProps> = ({}) => {
   // atom
-  const [currUser, _setCurrUser] = useAtom(setCurrUserAtom)
+  const [currUser, setCurrUser] = useAtom(setCurrUserAtom)
 
   // useState
   const [eventList, setEventList] = useState<Event[]>()
@@ -26,17 +23,16 @@ const Manage: NextPage<ManageProps> = ({}) => {
   const router = useRouter()
 
   // graphql query
-  const [{ data: meData, fetching }] = useMeQuery()
-  const [{ data: eventsOrganized, error }] = useGetEventsOrganizedQuery({})
+  const [{ data: eventsOrganized, error, fetching }] =
+    useGetEventsOrganizedQuery({})
+
+  const { meFetching } = useMe(router, setCurrUser)
 
   useEffect(() => {
-    if (!meData?.me) {
-      router.push('/')
-    }
-
     if (error) {
       // TOOD: handle error here
-      router.push('/')
+      console.log(error)
+      // router.push('/')
     }
 
     if (eventsOrganized?.getEventsOrganized) {
@@ -52,11 +48,11 @@ const Manage: NextPage<ManageProps> = ({}) => {
         }),
       )
     }
-  }, [meData, eventsOrganized])
+  }, [eventsOrganized])
 
   return (
     <>
-      {fetching ? (
+      {meFetching ? (
         <div>loading...</div>
       ) : (
         <div className="z-10 flex flex-col ">
@@ -66,7 +62,9 @@ const Manage: NextPage<ManageProps> = ({}) => {
           />
           <div className="relative flex flex-grow">
             <div className="grid min-h-full grid-cols-4 mt-5">
-              {eventList && eventList.length > 0 ? (
+              {fetching ? (
+                <div>fetching your events...</div>
+              ) : eventList && eventList.length > 0 ? (
                 <>
                   {/* Left component */}
                   {/* List of Organized Event */}
