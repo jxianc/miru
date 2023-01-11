@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { setNavbarStatusAtom, NavbarState } from '../libs/atom/navbar.atom'
-import { atom, useAtom } from 'jotai'
+import { setNavbarStatusAtom } from '../libs/atom/navbar.atom'
+import { useAtom } from 'jotai'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/router'
+
 interface NavbarProps {
   name: string
   image?: string
@@ -13,6 +14,22 @@ const Navbar: React.FC<NavbarProps> = ({ name, image }) => {
   const router = useRouter()
   const [navbarStatus, setNavbarStatus] = useAtom(setNavbarStatusAtom)
   const [showMenu, setShowMenu] = useState(false)
+
+  useEffect(() => {
+    switch (router.pathname) {
+      case '/create':
+        setNavbarStatus('create')
+        break
+      case '/manage':
+        setNavbarStatus('manage')
+        break
+      case '/registered':
+        setNavbarStatus('registered_event')
+        break
+      default:
+        setNavbarStatus('create')
+    }
+  }, [router])
 
   return (
     <div className="flex flex-col justify-between w-full p-5 border border-black md:items-center md:flex-row rounded-xl">
