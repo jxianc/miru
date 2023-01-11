@@ -151,32 +151,42 @@ export class EventService {
   async findEventsByOrganizerId(organizerId: string): Promise<Event[]> {
     // since this is called with auth guard
     // the user with the id is guaranteed exists
-    const userWithEventOrganized = await this.prisma.user.findUnique({
+    const userWithEventsOrganized = await this.prisma.user.findUnique({
       where: {
         id: organizerId,
       },
       include: {
         eventOrganized: {
           include: {
-            _count: {
-              select: {
-                participants: true,
-              },
-            },
+            participants: true,
           },
         },
       },
     })
 
-    // return empty array instead of undefined
     return (
-      userWithEventOrganized?.eventOrganized.map((e) => {
+      userWithEventsOrganized?.eventOrganized.map((e): Event => {
+        // calculate avarage rating and feedback count
+        let totalRating = 0
+        let ratingCount = 0
+        let feedbacksCount = 0
+        e.participants.forEach((p) => {
+          if (p.rating) {
+            totalRating += p.rating
+            ratingCount++
+          }
+          feedbacksCount += p.feedback ? 1 : 0
+        })
+        const averageRating = ratingCount ? totalRating / ratingCount : 0
         return {
           ...e,
-          participantsCount: e._count.participants,
+          participantsCount: e.participants.length,
+          averageRating,
+          feedbacksCount,
         }
       }) || []
     )
+    // return empty array instead of undefined
   }
 
   async findEventsByParticipantId(participantId: string) {

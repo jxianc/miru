@@ -44,6 +44,12 @@ export class Event extends BaseEntity {
   @Field(() => Int, { nullable: true })
   participantsCount?: number | null
 
+  @Field(() => Int, { nullable: true })
+  averageRating?: number | null
+
+  @Field(() => Int, { nullable: true })
+  feedbacksCount?: number | null
+
   @Field(() => [AnnouncementEntity], { nullable: true })
   announcements?: Announcement[]
 }
