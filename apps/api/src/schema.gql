@@ -76,9 +76,11 @@ scalar DateTime
 
 type Event {
   announcements: [Announcement!]
+  averageRating: Int
   createdAt: DateTime!
   description: String!
   endDate: DateTime
+  feedbacksCount: Int
   form: Form
   id: String!
   image: String
@@ -86,6 +88,7 @@ type Event {
   maximumAttendance: Int
   organizers: [User!]
   participants: [UserParticipateEvent!]
+  participantsCount: Int
   startDate: DateTime!
   title: String!
   updatedAt: DateTime!
@@ -237,7 +240,7 @@ type UserParticipateEvent {
   event: Event!
   feedback: String
   isArrived: Boolean!
-  rating: Float!
+  rating: Int
   user: User!
   userForm: UserForm!
 }

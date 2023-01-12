@@ -18,19 +18,19 @@ export class Event extends BaseEntity {
   description!: string
 
   @Field(() => String, { nullable: true })
-  image?: string
+  image?: string | null
 
   @Field(() => String)
   location!: string
 
   @Field(() => Int, { nullable: true })
-  maximumAttendance?: number
+  maximumAttendance?: number | null
 
   @Field(() => Date)
   startDate!: Date
 
   @Field(() => Date, { nullable: true })
-  endDate?: Date
+  endDate?: Date | null
 
   @Field(() => FormEntity, { nullable: true })
   form?: Form
@@ -40,6 +40,15 @@ export class Event extends BaseEntity {
 
   @Field(() => [UserParticipateEventEntity], { nullable: true })
   participants?: UserParticipateEvent[]
+
+  @Field(() => Int, { nullable: true })
+  participantsCount?: number | null
+
+  @Field(() => Int, { nullable: true })
+  averageRating?: number | null
+
+  @Field(() => Int, { nullable: true })
+  feedbacksCount?: number | null
 
   @Field(() => [AnnouncementEntity], { nullable: true })
   announcements?: Announcement[]
