@@ -1,16 +1,22 @@
 import React from 'react'
-import { Formik, Field, Form, ErrorMessage } from 'formik'
+import { Formik, Field, Form, FieldProps } from 'formik'
 import * as Yup from 'yup'
+import { FormField } from './form/FormField'
+import { useCreateEventMutation } from '../generated/graphql'
+import { toast } from 'react-hot-toast'
+import { useRouter } from 'next/router'
 import { useAtom } from 'jotai'
-import { setNavbarStatusAtom, NavbarState } from '../libs/atom/navbar.atom'
+import { setNavbarStatusAtom } from '../libs/atom/navbar.atom'
 
 interface AboutFormProps {
   setCreatedEvent: Function
 }
 
 export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
-  const [navbarStatus, setNavbarStatus] =
-    useAtom<NavbarState>(setNavbarStatusAtom)
+  const [navbarStatus, setNavbarStatus] = useAtom(setNavbarStatusAtom)
+
+  const [_data, createEvent] = useCreateEventMutation()
+  const router = useRouter()
 
   return (
     <div>
@@ -35,49 +41,65 @@ export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
           maxAttendance: Yup.string().required('This field is required.'),
           max: Yup.number(),
         })}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
-          setTimeout(() => {
-            // Data is collected here.
-            alert(JSON.stringify(values, null, 2))
-            setSubmitting(false)
-          }, 400)
+        onSubmit={async ({
+          title,
+          description,
+          location,
+          max,
+          maxAttendance,
+          date,
+          time,
+        }) => {
+          const startDate = new Date(date + 'T' + time).toISOString()
+          const toastId = toast.loading('Creating Event...')
+
+          const { data, error } = await createEvent({
+            createEventInput: {
+              title,
+              description,
+              location,
+              maximumAttendance: maxAttendance ? max : undefined,
+              startDate,
+            },
+          })
+
+          if (error || (data && !data.createEvent.success)) {
+            // failed to create event
+            // TODO: add button to let user to try again (refresh?)
+            toast.error('Failed to create event')
+          }
+
+          if (data?.createEvent.success) {
+            // create event successfully
+            toast.success('Event is created successfully', {
+              id: toastId,
+            })
+            router.push('/manage')
+            setNavbarStatus('manage')
+          }
         }}
       >
-        {({ setFieldValue, setFieldTouched, values, errors, touched }) => (
+        {({ values }) => (
           <Form className="flex flex-col justify-center ">
             {/* Form */}
             <div className="flex flex-col gap-10 md:flex-row">
               {/* Left */}
               <div className="flex flex-col w-full gap-10 md:pl-36">
-                <div className="relative flex flex-col flex-2">
-                  <p className="mb-1">Title</p>
-                  <Field
+                <div className="relative flex flex-col">
+                  <FormField
+                    label="Title"
                     name="title"
-                    type="text"
+                    inputType="text"
                     placeholder="Eg. The Night 2023"
-                    className="rounded-md placeholder-slate-400"
-                  />
-                  <ErrorMessage
-                    component="span"
-                    name="title"
-                    className="absolute bottom-0 left-0 text-red-500 translate-y-7"
                   />
                 </div>
-                <div className="relative flex flex-col flex-1 ">
-                  <div className="flex flex-col flex-grow">
-                    <p className="mb-1">Description</p>
-                    <Field
-                      name="description"
-                      type="text"
-                      as="textarea"
-                      className="min-h-[200px] md:flex-grow rounded-md placeholder-slate-400"
-                      placeholder="Eg. The purpose of the event..."
-                    />
-                  </div>
-                  <ErrorMessage
+                <div className="relative flex flex-col flex-1">
+                  <FormField
+                    label="Description"
                     name="description"
-                    component="span"
-                    className="absolute bottom-0 left-0 text-red-500 translate-y-7"
+                    inputType="text"
+                    as="textarea"
+                    placeholder="Eg. The purpose of the event..."
                   />
                 </div>
               </div>
@@ -85,55 +107,27 @@ export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
               {/* Right */}
               <div className="flex flex-col w-full gap-10 md:pr-36 ">
                 <div className="relative flex flex-col">
-                  <p className="mb-1">Location</p>
-                  <Field
+                  <FormField
+                    label="Location"
                     name="location"
-                    type="text"
+                    inputType="text"
                     placeholder="Eg. Bascom Hill, room 18"
-                    className="w-full rounded-md placeholder-slate-400"
-                  />
-                  <ErrorMessage
-                    component="span"
-                    name="location"
-                    className="absolute bottom-0 left-0 text-red-500 translate-y-7"
                   />
                 </div>
 
                 <div className="relative flex flex-col">
-                  <p className="mb-1">Date</p>
-                  <Field
-                    name="date"
-                    type="date"
-                    className="w-full rounded-md"
-                  />
-                  <ErrorMessage
-                    component="span"
-                    name="date"
-                    className="absolute bottom-0 left-0 text-red-500 translate-y-7"
-                  />
+                  <FormField label="Date" name="date" inputType="date" />
                 </div>
 
                 <div className="relative flex flex-col">
-                  <p className="mb-1">Time</p>
-                  <Field
-                    name="time"
-                    type="time"
-                    className="w-full rounded-md"
-                  />
-                  <ErrorMessage
-                    component="span"
-                    name="time"
-                    className="absolute bottom-0 left-0 text-red-500 translate-y-7"
-                  />
+                  <FormField label="Time" name="time" inputType="time" />
                 </div>
 
+                {/* TODO: make this radio input reusable for the future */}
                 <div className="relative flex flex-col md:min-h-[125px]">
-                  <p className="mb-1">Maximum Attendance</p>
-
-                  <Field
-                    name="maxAttendance"
-                    className="rounded-md"
-                    render={({ field }) => (
+                  <p className="mb-1 whitespace-nowrap">Maximum Attendance</p>
+                  <Field name="maxAttendance" className="rounded-md">
+                    {({ field }: FieldProps<any>) => (
                       <>
                         <div className="radio-item">
                           <input
@@ -162,7 +156,7 @@ export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
                         </div>
                       </>
                     )}
-                  />
+                  </Field>
                   {values.maxAttendance === 'yes' && (
                     <Field
                       name="max"
@@ -171,7 +165,6 @@ export const AboutForm: React.FC<AboutFormProps> = ({ setCreatedEvent }) => {
                       placeholder="Eg. 1"
                     />
                   )}
-                  <ErrorMessage name="firstName" />
                 </div>
               </div>
             </div>

@@ -3,6 +3,7 @@ import { BaseResponse } from '../base/base.response'
 import { PrismaService } from '../prisma.service'
 import { CreateEventInput } from './dto/create-event.input'
 import { CreateEventResponse } from './dto/create-event.response'
+import { Event } from './entities/event.entity'
 import { UpdateEventInput } from './dto/update-event.input'
 import { UpdateEventResponse } from './dto/update-event.response'
 
@@ -147,20 +148,45 @@ export class EventService {
     return event
   }
 
-  async findEventsByOrganizerId(organizerId: string) {
+  async findEventsByOrganizerId(organizerId: string): Promise<Event[]> {
     // since this is called with auth guard
     // the user with the id is guaranteed exists
-    const userWithEventOrganized = await this.prisma.user.findUnique({
+    const userWithEventsOrganized = await this.prisma.user.findUnique({
       where: {
         id: organizerId,
       },
       include: {
-        eventOrganized: true,
+        eventOrganized: {
+          include: {
+            participants: true,
+          },
+        },
       },
     })
 
+    return (
+      userWithEventsOrganized?.eventOrganized.map((e): Event => {
+        // calculate avarage rating and feedback count
+        let totalRating = 0
+        let ratingCount = 0
+        let feedbacksCount = 0
+        e.participants.forEach((p) => {
+          if (p.rating) {
+            totalRating += p.rating
+            ratingCount++
+          }
+          feedbacksCount += p.feedback ? 1 : 0
+        })
+        const averageRating = ratingCount ? totalRating / ratingCount : 0
+        return {
+          ...e,
+          participantsCount: e.participants.length,
+          averageRating,
+          feedbacksCount,
+        }
+      }) || []
+    )
     // return empty array instead of undefined
-    return userWithEventOrganized?.eventOrganized || []
   }
 
   async findEventsByParticipantId(participantId: string) {

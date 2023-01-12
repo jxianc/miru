@@ -12,6 +12,20 @@ type Announcement {
   updatedAt: DateTime!
 }
 
+enum AnnouncementAction {
+  CREATE
+  UPDATE
+}
+
+type AnnouncementRemoved {
+  announcementId: Int!
+}
+
+type AnnouncementUpdated {
+  announcement: Announcement!
+  announcementAction: AnnouncementAction!
+}
+
 type AuthResponse {
   accessToken: String
   errMsg: String
@@ -62,16 +76,19 @@ scalar DateTime
 
 type Event {
   announcements: [Announcement!]
+  averageRating: Int
   createdAt: DateTime!
   description: String!
   endDate: DateTime
-  form: Form!
+  feedbacksCount: Int
+  form: Form
   id: String!
   image: String
   location: String!
   maximumAttendance: Int
   organizers: [User!]
   participants: [UserParticipateEvent!]
+  participantsCount: Int
   startDate: DateTime!
   title: String!
   updatedAt: DateTime!
@@ -108,6 +125,11 @@ type Liveboard {
   participants: [UserParticipateEvent!]
 }
 
+type LiveboardPayload {
+  eventId: String!
+  payload: Payload!
+}
+
 type LiveboardResponse {
   errMsg: String
   liveboard: Liveboard
@@ -129,6 +151,18 @@ type Mutation {
   updateForm(createFormKeyInputs: [CreateFormKeyInput!], eventId: String!, removeFormKeyInputs: [Int!], updateFormKeyInputs: [UpdateFormKeyInput!]): UpdateFormResponse!
 }
 
+enum ParticipantAction {
+  ATTEND
+  QUIT
+}
+
+type ParticipantUpdated {
+  participantAction: ParticipantAction!
+  userId: String!
+}
+
+union Payload = AnnouncementRemoved | AnnouncementUpdated | ParticipantUpdated
+
 type Query {
   getEvent(eventId: String!): Event!
   getEventsOrganized: [Event!]!
@@ -137,6 +171,10 @@ type Query {
   getLiveboard(eventId: String!): LiveboardResponse!
   hello: String!
   me: User!
+}
+
+type Subscription {
+  liveboardUpdated(eventId: String!): LiveboardPayload!
 }
 
 input UpdateAnnouncementInput {
@@ -202,7 +240,7 @@ type UserParticipateEvent {
   event: Event!
   feedback: String
   isArrived: Boolean!
-  rating: Float!
+  rating: Int
   user: User!
   userForm: UserForm!
 }

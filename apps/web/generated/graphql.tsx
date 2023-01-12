@@ -33,6 +33,22 @@ export type Announcement = {
   updatedAt: Scalars['DateTime']
 }
 
+export enum AnnouncementAction {
+  Create = 'CREATE',
+  Update = 'UPDATE',
+}
+
+export type AnnouncementRemoved = {
+  __typename?: 'AnnouncementRemoved'
+  announcementId: Scalars['Int']
+}
+
+export type AnnouncementUpdated = {
+  __typename?: 'AnnouncementUpdated'
+  announcement: Announcement
+  announcementAction: AnnouncementAction
+}
+
 export type AuthResponse = {
   __typename?: 'AuthResponse'
   accessToken?: Maybe<Scalars['String']>
@@ -83,16 +99,19 @@ export type CreateFormKeyInput = {
 export type Event = {
   __typename?: 'Event'
   announcements?: Maybe<Array<Announcement>>
+  averageRating?: Maybe<Scalars['Int']>
   createdAt: Scalars['DateTime']
   description: Scalars['String']
   endDate?: Maybe<Scalars['DateTime']>
-  form: Form
+  feedbacksCount?: Maybe<Scalars['Int']>
+  form?: Maybe<Form>
   id: Scalars['String']
   image?: Maybe<Scalars['String']>
   location: Scalars['String']
   maximumAttendance?: Maybe<Scalars['Int']>
   organizers?: Maybe<Array<User>>
   participants?: Maybe<Array<UserParticipateEvent>>
+  participantsCount?: Maybe<Scalars['Int']>
   startDate: Scalars['DateTime']
   title: Scalars['String']
   updatedAt: Scalars['DateTime']
@@ -131,6 +150,12 @@ export type Liveboard = {
   annoucements?: Maybe<Array<Announcement>>
   event: Event
   participants?: Maybe<Array<UserParticipateEvent>>
+}
+
+export type LiveboardPayload = {
+  __typename?: 'LiveboardPayload'
+  eventId: Scalars['String']
+  payload: Payload
 }
 
 export type LiveboardResponse = {
@@ -209,6 +234,22 @@ export type MutationUpdateFormArgs = {
   updateFormKeyInputs?: InputMaybe<Array<UpdateFormKeyInput>>
 }
 
+export enum ParticipantAction {
+  Attend = 'ATTEND',
+  Quit = 'QUIT',
+}
+
+export type ParticipantUpdated = {
+  __typename?: 'ParticipantUpdated'
+  participantAction: ParticipantAction
+  userId: Scalars['String']
+}
+
+export type Payload =
+  | AnnouncementRemoved
+  | AnnouncementUpdated
+  | ParticipantUpdated
+
 export type Query = {
   __typename?: 'Query'
   getEvent: Event
@@ -229,6 +270,15 @@ export type QueryGetFormArgs = {
 }
 
 export type QueryGetLiveboardArgs = {
+  eventId: Scalars['String']
+}
+
+export type Subscription = {
+  __typename?: 'Subscription'
+  liveboardUpdated: LiveboardPayload
+}
+
+export type SubscriptionLiveboardUpdatedArgs = {
   eventId: Scalars['String']
 }
 
@@ -301,9 +351,62 @@ export type UserParticipateEvent = {
   event: Event
   feedback?: Maybe<Scalars['String']>
   isArrived: Scalars['Boolean']
-  rating: Scalars['Float']
+  rating?: Maybe<Scalars['Int']>
   user: User
   userForm: UserForm
+}
+
+export type BaseEventFragment = {
+  __typename?: 'Event'
+  id: string
+  title: string
+  description: string
+  location: string
+  startDate: any
+  endDate?: any | null
+  maximumAttendance?: number | null
+  createdAt: any
+  updatedAt: any
+}
+
+export type CreateEventMutationVariables = Exact<{
+  createEventInput: CreateEventInput
+}>
+
+export type CreateEventMutation = {
+  __typename?: 'Mutation'
+  createEvent: {
+    __typename?: 'CreateEventResponse'
+    errMsg?: string | null
+    success: boolean
+    event: {
+      __typename?: 'Event'
+      id: string
+      title: string
+      description: string
+      location: string
+      startDate: any
+      endDate?: any | null
+      maximumAttendance?: number | null
+      createdAt: any
+      updatedAt: any
+      organizers?: Array<{
+        __typename?: 'User'
+        id: string
+        name?: string | null
+      }> | null
+      form?: {
+        __typename?: 'Form'
+        createdAt: any
+        updatedAt: any
+        formKeys?: Array<{
+          __typename?: 'FormKey'
+          id: number
+          label: string
+        }> | null
+      } | null
+    }
+  }
 }
 
 export type RefreshTokenMutationVariables = Exact<{ [key: string]: never }>
@@ -316,6 +419,27 @@ export type RefreshTokenMutation = {
     errMsg?: string | null
     success: boolean
   }
+}
+
+export type GetEventsOrganizedQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetEventsOrganizedQuery = {
+  __typename?: 'Query'
+  getEventsOrganized: Array<{
+    __typename?: 'Event'
+    participantsCount?: number | null
+    averageRating?: number | null
+    feedbacksCount?: number | null
+    id: string
+    title: string
+    description: string
+    location: string
+    startDate: any
+    endDate?: any | null
+    maximumAttendance?: number | null
+    createdAt: any
+    updatedAt: any
+  }>
 }
 
 export type HelloQueryVariables = Exact<{ [key: string]: never }>
@@ -337,6 +461,49 @@ export type MeQuery = {
   }
 }
 
+export const BaseEventFragmentDoc = gql`
+  fragment BaseEvent on Event {
+    id
+    title
+    description
+    location
+    startDate
+    endDate
+    maximumAttendance
+    createdAt
+    updatedAt
+  }
+`
+export const CreateEventDocument = gql`
+  mutation CreateEvent($createEventInput: CreateEventInput!) {
+    createEvent(createEventInput: $createEventInput) {
+      errMsg
+      success
+      event {
+        ...BaseEvent
+        organizers {
+          id
+          name
+        }
+        form {
+          formKeys {
+            id
+            label
+          }
+          createdAt
+          updatedAt
+        }
+      }
+    }
+  }
+  ${BaseEventFragmentDoc}
+`
+
+export function useCreateEventMutation() {
+  return Urql.useMutation<CreateEventMutation, CreateEventMutationVariables>(
+    CreateEventDocument,
+  )
+}
 export const RefreshTokenDocument = gql`
   mutation RefreshToken {
     refreshToken {
@@ -351,6 +518,26 @@ export function useRefreshTokenMutation() {
   return Urql.useMutation<RefreshTokenMutation, RefreshTokenMutationVariables>(
     RefreshTokenDocument,
   )
+}
+export const GetEventsOrganizedDocument = gql`
+  query GetEventsOrganized {
+    getEventsOrganized {
+      ...BaseEvent
+      participantsCount
+      averageRating
+      feedbacksCount
+    }
+  }
+  ${BaseEventFragmentDoc}
+`
+
+export function useGetEventsOrganizedQuery(
+  options?: Omit<Urql.UseQueryArgs<GetEventsOrganizedQueryVariables>, 'query'>,
+) {
+  return Urql.useQuery<
+    GetEventsOrganizedQuery,
+    GetEventsOrganizedQueryVariables
+  >({ query: GetEventsOrganizedDocument, ...options })
 }
 export const HelloDocument = gql`
   query Hello {

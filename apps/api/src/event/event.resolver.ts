@@ -26,7 +26,7 @@ export class EventResolver {
   // find all events by organizer
   @UseGuards(JwtGqlAuthGuard)
   @Query(() => [Event])
-  getEventsOrganized(@CurrentUser() user: User) {
+  getEventsOrganized(@CurrentUser() user: User): Promise<Event[]> {
     return this.eventService.findEventsByOrganizerId(user.id)
   }
 
