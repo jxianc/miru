@@ -11,11 +11,12 @@ import {
   useMeQuery,
 } from '../generated/graphql'
 import { setCurrUserAtom } from '../libs/atom/current-user.atom'
+import { useMe } from '../libs/hooks/use-me'
 interface RegisteredProps {}
 
 const Registered: NextPage<RegisteredProps> = ({}) => {
   // atom
-  const [currUser, _setCurrUser] = useAtom(setCurrUserAtom)
+  const [currUser, setCurrUser] = useAtom(setCurrUserAtom)
 
   // useState
   const [eventList, setEventList] = useState<Event[]>()
@@ -25,16 +26,13 @@ const Registered: NextPage<RegisteredProps> = ({}) => {
   const router = useRouter()
 
   // graphql query
-  const [{ data: meData, fetching }] = useMeQuery()
-
   // TODO: getEventsRegistered
-  const [{ data: eventsOrganized, error }] = useGetEventsOrganizedQuery({})
+  const [{ data: eventsOrganized, fetching, error }] =
+    useGetEventsOrganizedQuery({})
+
+  const { meFetching } = useMe(router, setCurrUser)
 
   useEffect(() => {
-    if (!meData?.me) {
-      router.push('/')
-    }
-
     if (error) {
       // TOOD: handle error here
       router.push('/')
@@ -48,18 +46,17 @@ const Registered: NextPage<RegisteredProps> = ({}) => {
           const dateB = b.createdAt
           if (dateA > dateB) {
             return -1
-          }
-          if (dateA < dateB) {
+          } else {
             return 1
           }
         }),
       )
     }
-  }, [meData, eventsOrganized])
+  }, [eventsOrganized])
 
   return (
     <>
-      {fetching ? (
+      {meFetching ? (
         <div>loading...</div>
       ) : (
         <div className="flex flex-col h-full pb-5">
@@ -69,7 +66,9 @@ const Registered: NextPage<RegisteredProps> = ({}) => {
           />
           <div className="relative flex flex-grow">
             <div className="grid min-w-full min-h-full grid-cols-4 mt-5">
-              {eventList && eventList.length > 0 ? (
+              {fetching ? (
+                <div>fetching your events...</div>
+              ) : eventList && eventList.length > 0 ? (
                 <>
                   {/* Left component */}
                   {/* List of Organized Event */}
