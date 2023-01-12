@@ -60,7 +60,7 @@ const Manage: NextPage<ManageProps> = ({}) => {
       {fetching ? (
         <div>loading...</div>
       ) : (
-        <div className="z-10 flex flex-col ">
+        <div className="flex flex-col h-full pb-5">
           <Navbar
             name={currUser?.name || `user${currUser?.id}`}
             image={currUser?.image || undefined}
