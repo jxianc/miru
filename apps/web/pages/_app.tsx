@@ -10,7 +10,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <UrqlProvider value={client}>
       <JotaiProvider>
         <Toaster />
-        <div className="h-screen px-5 py-5 overflow-auto font-mono scrollbar-hide">
+        <div className="h-screen overflow-auto font-sans scrollbar-hide">
           <Component {...pageProps} className="" />
         </div>
       </JotaiProvider>

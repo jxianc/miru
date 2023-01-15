@@ -29,7 +29,7 @@ const Create: NextPage<CreateProps> = ({}) => {
       {meFetching ? (
         <div>loading...</div>
       ) : (
-        <div>
+        <div className="px-5 py-5">
           <Navbar
             name={currUser?.name || `user${currUser?.id}`}
             image={currUser?.image || undefined}
