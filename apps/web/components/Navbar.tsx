@@ -85,6 +85,10 @@ const Navbar: React.FC<NavbarProps> = ({ name, image }) => {
         >
           Registered Event
         </div>
+        {/* Sign out Button */}
+        <div className="p-2 px-4 text-white bg-red-600 rounded-lg cursor-pointer">
+          Sign Out
+        </div>
         <Image
           width={40}
           height={40}
