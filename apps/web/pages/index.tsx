@@ -2,7 +2,7 @@ import { ArrowRightCircleIcon } from '@heroicons/react/24/outline'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useRef, useState } from 'react'
-import { FcGoogle } from 'react-icons/fc'
+import { AiOutlineGoogle } from 'react-icons/ai'
 import { Dialog, Transition } from '@headlessui/react'
 import { setCurrUserAtom } from '../libs/atom/current-user.atom'
 import { useMe } from '../libs/hooks/use-me'
@@ -18,9 +18,9 @@ export default function Web() {
   const { meFetching, isLoggedIn } = useMe(router, setCurrUser)
 
   useEffect(() => {
-    if (!meFetching && isLoggedIn) {
-      router.push('/create')
-    }
+    // if (!meFetching && isLoggedIn) {
+    //   router.push('/create')
+    // }
   }, [meFetching, isLoggedIn])
 
   return (
@@ -141,23 +141,22 @@ export default function Web() {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                   >
-                    <Dialog.Panel className="max-w-sm mx-auto bg-white rounded-lg p-7">
-                      <Dialog.Title className="text-2xl font-medium text-center">
-                        Sign In
+                    <Dialog.Panel className="max-w-sm mx-auto bg-black rounded-lg p-7">
+                      <Dialog.Title className="text-2xl font-bold text-center text-white ">
+                        Welcome to UniSpace
                       </Dialog.Title>
-                      <Dialog.Description className="my-4">
-                        Please select a way to sign in.{' '}
+                      <Dialog.Description className="my-3 text-center text-slate-500">
+                        Select a way to continue
                       </Dialog.Description>
-
                       <button
                         ref={completeButtonRef}
-                        className="flex items-center justify-center gap-5 p-3 border hover:cursor-pointer rounded-xl "
+                        className="flex items-center justify-center w-full gap-5 p-3 text-white bg-blue-500 hover:cursor-pointer rounded-xl"
                         onClick={() => {
                           window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google/sign-in`
                         }}
                       >
-                        <FcGoogle className="text-2xl" />
-                        <p>Continue with google</p>
+                        <AiOutlineGoogle className="text-2xl" />
+                        <p>Continue with Google</p>
                       </button>
                     </Dialog.Panel>
                   </Transition.Child>
