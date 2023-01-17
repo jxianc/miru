@@ -6,6 +6,7 @@ import { AiOutlineGoogle } from 'react-icons/ai'
 import { Dialog, Transition } from '@headlessui/react'
 import { setCurrUserAtom } from '../libs/atom/current-user.atom'
 import { useMe } from '../libs/hooks/use-me'
+import { motion } from 'framer-motion'
 
 type toShow = 'organizers' | 'participants'
 export default function Web() {
@@ -16,6 +17,21 @@ export default function Web() {
 
   const [_currUser, setCurrUser] = useAtom(setCurrUserAtom)
   const { meFetching, isLoggedIn } = useMe(router, setCurrUser)
+
+  const draw = {
+    hidden: { pathLength: 0, opacity: 0 },
+    visible: (i) => {
+      const delay = 0
+      return {
+        pathLength: 1,
+        opacity: 1,
+        transition: {
+          pathLength: { delay, type: 'spring', duration: 1.5, bounce: 0 },
+          opacity: { delay, duration: 0.01 },
+        },
+      }
+    },
+  }
 
   useEffect(() => {
     // if (!meFetching && isLoggedIn) {
@@ -126,7 +142,10 @@ export default function Web() {
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+                <div
+                  className="fixed inset-0 bg-black/100"
+                  aria-hidden="true"
+                />
               </Transition.Child>
               <div className="fixed inset-0 overflow-y-auto">
                 {/* Container to center the panel */}
@@ -145,7 +164,7 @@ export default function Web() {
                       <Dialog.Title className="text-2xl font-bold text-center text-white ">
                         Welcome to UniSpace
                       </Dialog.Title>
-                      <Dialog.Description className="my-3 text-center text-slate-500">
+                      <Dialog.Description className="my-4 text-center text-slate-500">
                         Select a way to continue
                       </Dialog.Description>
                       <button
@@ -158,6 +177,26 @@ export default function Web() {
                         <AiOutlineGoogle className="text-2xl" />
                         <p>Continue with Google</p>
                       </button>
+                      <motion.svg
+                        width="300"
+                        height="300"
+                        viewBox="0 0 600 600"
+                        initial="hidden"
+                        animate="visible"
+                        className="fixed inset-0 pointer-events-none fill-transparent"
+                      >
+                        <motion.rect
+                          width="600"
+                          strokeWidth="4"
+                          height="400"
+                          x="0"
+                          y="0"
+                          rx="30"
+                          stroke="#fff"
+                          variants={draw}
+                          custom={1}
+                        />
+                      </motion.svg>
                     </Dialog.Panel>
                   </Transition.Child>
                 </div>
