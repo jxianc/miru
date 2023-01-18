@@ -29,7 +29,6 @@ export class AuthController {
   @Post('refresh_token')
   async refreshToken(@Req() req: Request, @Res() res: Response) {
     const response = await this.authService.refreshToken(req, res)
-    console.log(response)
     res.send(response)
   }
 
