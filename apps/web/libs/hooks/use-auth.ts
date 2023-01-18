@@ -6,27 +6,33 @@ import { useMeQuery, User } from '../../generated/graphql'
  * custom hook to check if user logged in, set current user
  * @param router for redirecting user to login page
  * @param setCurrUser to set current user
+ *
+ * @typedef {Object} UseAuthReturnType
+ * @property {boolean} meFetching
+ * @property {boolean} isLoggedIn
+ *
+ * @returns {UseAuthReturnType}
  */
-export const useMe = (
+export const useAuth = (
   router: NextRouter,
   setCurrUser: (user: User | null) => void,
 ) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [{ data, fetching }] = useMeQuery()
+  const { data, loading, error } = useMeQuery()
 
   useEffect(() => {
-    if (!fetching) {
-      if (!data?.me) {
+    if (!loading) {
+      if (!data?.me || error) {
         router.push('/')
       } else {
         setIsLoggedIn(true)
         setCurrUser(data.me)
       }
     }
-  }, [data, fetching])
+  }, [data, loading])
 
   return {
-    meFetching: fetching,
+    meFetching: loading,
     isLoggedIn,
   }
 }

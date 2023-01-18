@@ -1,3 +1,4 @@
+import { getDataFromTree } from '@apollo/react-ssr'
 import { useAtom } from 'jotai'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
@@ -5,13 +6,10 @@ import { useEffect, useState } from 'react'
 import { EventBoard } from '../components/EventBoard'
 import { EventList } from '../components/EventList'
 import Navbar from '../components/Navbar'
-import {
-  Event,
-  useGetEventsOrganizedQuery,
-  useMeQuery,
-} from '../generated/graphql'
+import { Event, useGetEventsOrganizedQuery } from '../generated/graphql'
+import withApollo from '../libs/apollo/with-apollo'
 import { setCurrUserAtom } from '../libs/atom/current-user.atom'
-import { useMe } from '../libs/hooks/use-me'
+import { useAuth } from '../libs/hooks/use-auth'
 interface RegisteredProps {}
 
 const Registered: NextPage<RegisteredProps> = ({}) => {
@@ -27,10 +25,13 @@ const Registered: NextPage<RegisteredProps> = ({}) => {
 
   // graphql query
   // TODO: getEventsRegistered
-  const [{ data: eventsOrganized, fetching, error }] =
-    useGetEventsOrganizedQuery({})
+  const {
+    data: eventsOrganized,
+    loading,
+    error,
+  } = useGetEventsOrganizedQuery({})
 
-  const { meFetching } = useMe(router, setCurrUser)
+  const { meFetching } = useAuth(router, setCurrUser)
 
   useEffect(() => {
     if (error) {
@@ -40,17 +41,7 @@ const Registered: NextPage<RegisteredProps> = ({}) => {
 
     // TODO: getEventsRegistered
     if (eventsOrganized?.getEventsOrganized) {
-      setEventList(
-        eventsOrganized.getEventsOrganized.sort((a, b) => {
-          const dateA = a.createdAt
-          const dateB = b.createdAt
-          if (dateA > dateB) {
-            return -1
-          } else {
-            return 1
-          }
-        }),
-      )
+      setEventList(eventsOrganized.getEventsOrganized)
     }
   }, [eventsOrganized])
 
@@ -66,7 +57,7 @@ const Registered: NextPage<RegisteredProps> = ({}) => {
           />
           <div className="relative flex flex-grow">
             <div className="grid min-w-full min-h-full grid-cols-4 mt-5">
-              {fetching ? (
+              {loading ? (
                 <div>fetching your events...</div>
               ) : eventList && eventList.length > 0 ? (
                 <>
@@ -101,4 +92,4 @@ const Registered: NextPage<RegisteredProps> = ({}) => {
   )
 }
 
-export default Registered
+export default withApollo(Registered, { getDataFromTree })

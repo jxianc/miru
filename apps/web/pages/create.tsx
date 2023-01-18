@@ -1,12 +1,14 @@
+import { getDataFromTree } from '@apollo/react-ssr'
 import { useAtom } from 'jotai'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { AboutForm } from '../components/AboutForm'
 import Navbar from '../components/Navbar'
+import withApollo from '../libs/apollo/with-apollo'
 import { setCurrUserAtom } from '../libs/atom/current-user.atom'
 import { navbarStatusAtom } from '../libs/atom/navbar.atom'
-import { useMe } from '../libs/hooks/use-me'
+import { useAuth } from '../libs/hooks/use-auth'
 
 interface CreateProps {}
 
@@ -16,20 +18,19 @@ const Create: NextPage<CreateProps> = ({}) => {
   // atom
   const [navbarStatus] = useAtom(navbarStatusAtom)
   const [currUser, setCurrUser] = useAtom(setCurrUserAtom)
-
   const [createdEvent, setCreatedEvent] = useState<createdEvent>(null)
 
   // router
   const router = useRouter()
 
-  const { meFetching } = useMe(router, setCurrUser)
+  const { meFetching, isLoggedIn } = useAuth(router, setCurrUser)
 
   return (
     <>
       {meFetching ? (
         <div>loading...</div>
-      ) : (
-        <div className="px-5 py-5">
+      ) : isLoggedIn ? (
+        <div>
           <Navbar
             name={currUser?.name || `user${currUser?.id}`}
             image={currUser?.image || undefined}
@@ -99,9 +100,11 @@ const Create: NextPage<CreateProps> = ({}) => {
             <AboutForm setCreatedEvent={setCreatedEvent} />
           )}
         </div>
+      ) : (
+        <div>loading...</div>
       )}
     </>
   )
 }
 
-export default Create
+export default withApollo(Create, { getDataFromTree })

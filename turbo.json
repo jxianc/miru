@@ -6,7 +6,12 @@
       "outputs": ["dist/**", ".next/**"]
     },
     "lint": {
-      "dependsOn": ["$NEXT_PUBLIC_API_URL", "$NEXT_PUBLIC_AT_KEY"],
+      "dependsOn": [
+        "$NEXT_PUBLIC_API_URL",
+        "$NEXT_PUBLIC_AT_KEY",
+        "$NEXT_PUBLIC_RT_COOKIE",
+        "$NODE_ENV"
+      ],
       "outputs": []
     },
     "dev": {

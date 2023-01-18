@@ -5,22 +5,28 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import { AiOutlineGoogle } from 'react-icons/ai'
 import { Dialog, Transition } from '@headlessui/react'
 import { setCurrUserAtom } from '../libs/atom/current-user.atom'
-import { useMe } from '../libs/hooks/use-me'
 import { motion } from 'framer-motion'
+import { useHelloQuery, useMeQuery } from '../generated/graphql'
+import { FcGoogle } from 'react-icons/fc'
+import withApollo from '../libs/apollo/with-apollo'
+import { getDataFromTree } from '@apollo/react-ssr'
+import { useAuth } from '../libs/hooks/use-auth'
 
 type toShow = 'organizers' | 'participants'
-export default function Web() {
+
+export function Web() {
   const router = useRouter()
   const [toShow, setToShow] = useState<toShow>('organizers')
   const [userLogin, setUserLogin] = useState(false)
   let completeButtonRef = useRef(null)
 
   const [_currUser, setCurrUser] = useAtom(setCurrUserAtom)
-  const { meFetching, isLoggedIn } = useMe(router, setCurrUser)
+
+  const { meFetching, isLoggedIn } = useAuth(router, setCurrUser)
 
   const draw = {
     hidden: { pathLength: 0, opacity: 0 },
-    visible: (i) => {
+    visible: (i: any) => {
       const delay = 0
       return {
         pathLength: 1,
@@ -213,3 +219,4 @@ export default function Web() {
 {
   /*  */
 }
+export default withApollo(Web, { getDataFromTree })
