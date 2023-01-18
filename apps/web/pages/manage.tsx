@@ -1,3 +1,4 @@
+import { getDataFromTree } from '@apollo/react-ssr'
 import { useAtom } from 'jotai'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
@@ -6,8 +7,9 @@ import { AdminDashboard } from '../components/AdminDashboard'
 import { EventList } from '../components/EventList'
 import Navbar from '../components/Navbar'
 import { Event, useGetEventsOrganizedQuery } from '../generated/graphql'
+import withApollo from '../libs/apollo/with-apollo'
 import { setCurrUserAtom } from '../libs/atom/current-user.atom'
-import { useMe } from '../libs/hooks/use-me'
+import { useAuth } from '../libs/hooks/use-auth'
 
 interface ManageProps {}
 
@@ -23,10 +25,13 @@ const Manage: NextPage<ManageProps> = ({}) => {
   const router = useRouter()
 
   // graphql query
-  const [{ data: eventsOrganized, error, fetching }] =
-    useGetEventsOrganizedQuery({})
+  const {
+    data: eventsOrganized,
+    error,
+    loading,
+  } = useGetEventsOrganizedQuery({})
 
-  const { meFetching } = useMe(router, setCurrUser)
+  const { meFetching } = useAuth(router, setCurrUser)
 
   useEffect(() => {
     if (error) {
@@ -36,17 +41,7 @@ const Manage: NextPage<ManageProps> = ({}) => {
     }
 
     if (eventsOrganized?.getEventsOrganized) {
-      setEventList(
-        eventsOrganized.getEventsOrganized.sort((a, b) => {
-          const dateA = a.createdAt
-          const dateB = b.createdAt
-          if (dateA > dateB) {
-            return -1
-          } else {
-            return 1
-          }
-        }),
-      )
+      setEventList(eventsOrganized.getEventsOrganized)
     }
   }, [eventsOrganized])
 
@@ -62,7 +57,7 @@ const Manage: NextPage<ManageProps> = ({}) => {
           />
           <div className="relative flex flex-grow">
             <div className="grid min-h-full grid-cols-4 mt-5">
-              {fetching ? (
+              {loading ? (
                 <div>fetching your events...</div>
               ) : eventList && eventList.length > 0 ? (
                 <>
@@ -97,4 +92,4 @@ const Manage: NextPage<ManageProps> = ({}) => {
   )
 }
 
-export default Manage
+export default withApollo(Manage, { getDataFromTree })

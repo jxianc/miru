@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common'
+import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { GoogleAuthGuard } from './guards/google.guard'
 import { Request, Response } from 'express'
@@ -24,6 +24,13 @@ export class AuthController {
     // console.log('access token: ', response.accessToken)
     res.redirect(process.env.CLIENT_ORIGIN)
     return response
+  }
+
+  @Post('refresh_token')
+  async refreshToken(@Req() req: Request, @Res() res: Response) {
+    const response = await this.authService.refreshToken(req, res)
+    console.log(response)
+    res.send(response)
   }
 
   @UseGuards(JwtAuthGuard)

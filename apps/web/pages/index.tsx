@@ -1,14 +1,18 @@
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import { useHelloQuery, useMeQuery } from '../generated/graphql'
 import { FcGoogle } from 'react-icons/fc'
 import { setCurrUserAtom } from '../libs/atom/current-user.atom'
-import { useMe } from '../libs/hooks/use-me'
+import withApollo from '../libs/apollo/with-apollo'
+import { getDataFromTree } from '@apollo/react-ssr'
+import { useAuth } from '../libs/hooks/use-auth'
 
-export default function Web() {
+export function Web() {
   const router = useRouter()
   const [_currUser, setCurrUser] = useAtom(setCurrUserAtom)
-  const { meFetching, isLoggedIn } = useMe(router, setCurrUser)
+
+  const { meFetching, isLoggedIn } = useAuth(router, setCurrUser)
 
   useEffect(() => {
     if (!meFetching && isLoggedIn) {
@@ -41,3 +45,5 @@ export default function Web() {
     </>
   )
 }
+
+export default withApollo(Web, { getDataFromTree })

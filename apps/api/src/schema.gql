@@ -26,12 +26,6 @@ type AnnouncementUpdated {
   announcementAction: AnnouncementAction!
 }
 
-type AuthResponse {
-  accessToken: String
-  errMsg: String
-  success: Boolean!
-}
-
 type BaseResponse {
   errMsg: String
   success: Boolean!
@@ -142,7 +136,6 @@ type Mutation {
   createAnnouncement(createAnnouncementInput: CreateAnnouncementInput!, eventId: String!): CreateAnnouncementResponse!
   createEvent(createEventInput: CreateEventInput!): CreateEventResponse!
   quitEvent(eventId: String!): BaseResponse!
-  refreshToken: AuthResponse!
   removeAnnouncement(announcementId: Float!, eventId: String!): BaseResponse!
   removeEvent(eventId: String!): BaseResponse!
   signUpEvent(eventId: String!, formValueInputs: [FormValueInput!]!): BaseResponse!

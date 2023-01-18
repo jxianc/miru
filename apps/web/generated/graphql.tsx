@@ -1,5 +1,5 @@
-import gql from 'graphql-tag'
-import * as Urql from 'urql'
+import { gql } from '@apollo/client'
+import * as Apollo from '@apollo/client'
 export type Maybe<T> = T | null
 export type InputMaybe<T> = Maybe<T>
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -11,7 +11,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>
 }
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+const defaultOptions = {} as const
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string
@@ -498,12 +498,49 @@ export const CreateEventDocument = gql`
   }
   ${BaseEventFragmentDoc}
 `
+export type CreateEventMutationFn = Apollo.MutationFunction<
+  CreateEventMutation,
+  CreateEventMutationVariables
+>
 
-export function useCreateEventMutation() {
-  return Urql.useMutation<CreateEventMutation, CreateEventMutationVariables>(
+/**
+ * __useCreateEventMutation__
+ *
+ * To run a mutation, you first call `useCreateEventMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateEventMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createEventMutation, { data, loading, error }] = useCreateEventMutation({
+ *   variables: {
+ *      createEventInput: // value for 'createEventInput'
+ *   },
+ * });
+ */
+export function useCreateEventMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateEventMutation,
+    CreateEventMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<CreateEventMutation, CreateEventMutationVariables>(
     CreateEventDocument,
+    options,
   )
 }
+export type CreateEventMutationHookResult = ReturnType<
+  typeof useCreateEventMutation
+>
+export type CreateEventMutationResult =
+  Apollo.MutationResult<CreateEventMutation>
+export type CreateEventMutationOptions = Apollo.BaseMutationOptions<
+  CreateEventMutation,
+  CreateEventMutationVariables
+>
 export const RefreshTokenDocument = gql`
   mutation RefreshToken {
     refreshToken {
@@ -513,12 +550,48 @@ export const RefreshTokenDocument = gql`
     }
   }
 `
+export type RefreshTokenMutationFn = Apollo.MutationFunction<
+  RefreshTokenMutation,
+  RefreshTokenMutationVariables
+>
 
-export function useRefreshTokenMutation() {
-  return Urql.useMutation<RefreshTokenMutation, RefreshTokenMutationVariables>(
-    RefreshTokenDocument,
-  )
+/**
+ * __useRefreshTokenMutation__
+ *
+ * To run a mutation, you first call `useRefreshTokenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRefreshTokenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [refreshTokenMutation, { data, loading, error }] = useRefreshTokenMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRefreshTokenMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RefreshTokenMutation,
+    RefreshTokenMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<
+    RefreshTokenMutation,
+    RefreshTokenMutationVariables
+  >(RefreshTokenDocument, options)
 }
+export type RefreshTokenMutationHookResult = ReturnType<
+  typeof useRefreshTokenMutation
+>
+export type RefreshTokenMutationResult =
+  Apollo.MutationResult<RefreshTokenMutation>
+export type RefreshTokenMutationOptions = Apollo.BaseMutationOptions<
+  RefreshTokenMutation,
+  RefreshTokenMutationVariables
+>
 export const GetEventsOrganizedDocument = gql`
   query GetEventsOrganized {
     getEventsOrganized {
@@ -531,28 +604,100 @@ export const GetEventsOrganizedDocument = gql`
   ${BaseEventFragmentDoc}
 `
 
+/**
+ * __useGetEventsOrganizedQuery__
+ *
+ * To run a query within a React component, call `useGetEventsOrganizedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetEventsOrganizedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetEventsOrganizedQuery({
+ *   variables: {
+ *   },
+ * });
+ */
 export function useGetEventsOrganizedQuery(
-  options?: Omit<Urql.UseQueryArgs<GetEventsOrganizedQueryVariables>, 'query'>,
-) {
-  return Urql.useQuery<
+  baseOptions?: Apollo.QueryHookOptions<
     GetEventsOrganizedQuery,
     GetEventsOrganizedQueryVariables
-  >({ query: GetEventsOrganizedDocument, ...options })
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<
+    GetEventsOrganizedQuery,
+    GetEventsOrganizedQueryVariables
+  >(GetEventsOrganizedDocument, options)
 }
+export function useGetEventsOrganizedLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetEventsOrganizedQuery,
+    GetEventsOrganizedQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<
+    GetEventsOrganizedQuery,
+    GetEventsOrganizedQueryVariables
+  >(GetEventsOrganizedDocument, options)
+}
+export type GetEventsOrganizedQueryHookResult = ReturnType<
+  typeof useGetEventsOrganizedQuery
+>
+export type GetEventsOrganizedLazyQueryHookResult = ReturnType<
+  typeof useGetEventsOrganizedLazyQuery
+>
+export type GetEventsOrganizedQueryResult = Apollo.QueryResult<
+  GetEventsOrganizedQuery,
+  GetEventsOrganizedQueryVariables
+>
 export const HelloDocument = gql`
   query Hello {
     hello
   }
 `
 
+/**
+ * __useHelloQuery__
+ *
+ * To run a query within a React component, call `useHelloQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHelloQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHelloQuery({
+ *   variables: {
+ *   },
+ * });
+ */
 export function useHelloQuery(
-  options?: Omit<Urql.UseQueryArgs<HelloQueryVariables>, 'query'>,
+  baseOptions?: Apollo.QueryHookOptions<HelloQuery, HelloQueryVariables>,
 ) {
-  return Urql.useQuery<HelloQuery, HelloQueryVariables>({
-    query: HelloDocument,
-    ...options,
-  })
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<HelloQuery, HelloQueryVariables>(
+    HelloDocument,
+    options,
+  )
 }
+export function useHelloLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<HelloQuery, HelloQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<HelloQuery, HelloQueryVariables>(
+    HelloDocument,
+    options,
+  )
+}
+export type HelloQueryHookResult = ReturnType<typeof useHelloQuery>
+export type HelloLazyQueryHookResult = ReturnType<typeof useHelloLazyQuery>
+export type HelloQueryResult = Apollo.QueryResult<
+  HelloQuery,
+  HelloQueryVariables
+>
 export const MeDocument = gql`
   query Me {
     me {
@@ -566,11 +711,33 @@ export const MeDocument = gql`
   }
 `
 
+/**
+ * __useMeQuery__
+ *
+ * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
 export function useMeQuery(
-  options?: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'>,
+  baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>,
 ) {
-  return Urql.useQuery<MeQuery, MeQueryVariables>({
-    query: MeDocument,
-    ...options,
-  })
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options)
 }
+export function useMeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options)
+}
+export type MeQueryHookResult = ReturnType<typeof useMeQuery>
+export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>
+export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>
