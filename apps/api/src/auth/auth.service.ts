@@ -238,4 +238,14 @@ export class AuthService {
       secure: true,
     })
   }
+
+  async signOut(res: Response, userId: string) {
+    res.clearCookie(process.env.REFRESH_TOKEN_COOKIE_KEY, {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    })
+    await this.updateRefreshToken('', userId, false)
+    return true
+  }
 }

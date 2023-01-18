@@ -16,7 +16,11 @@ import jwtDecode from 'jwt-decode'
 import { NextPage } from 'next'
 import App from 'next/app'
 import React from 'react'
-import { getAccessToken, setAccessToken } from '../accesstoken-operation'
+import {
+  getAccessToken,
+  removeAccessToken,
+  setAccessToken,
+} from '../accesstoken-operation'
 import { isServer } from '../is-server'
 import {
   ApolloContext,
@@ -247,11 +251,20 @@ const createApolloClient: InitApolloClient<any> = ({
         setAccessToken(accessToken)
       }
     },
-    handleError: (err) => {
+    handleError: async (err) => {
       // full control over handling token fetch Error
       if (!isServer()) {
         console.warn('Your refresh token is invalid. Try to relogin')
         console.error(err)
+
+        // call logout query here and remove access token
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign_out`, {
+          method: 'POST',
+          credentials: 'include',
+        })
+        removeAccessToken()
+
+        // TODO: redirect to homepage?
       }
     },
   })

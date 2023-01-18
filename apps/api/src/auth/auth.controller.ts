@@ -4,6 +4,8 @@ import { GoogleAuthGuard } from './guards/google.guard'
 import { Request, Response } from 'express'
 import { OAuthUser } from './types/oauth-user.type'
 import { JwtAuthGuard } from './guards/jwt.guard'
+import { CurrentUser } from './decorators/current-user.decorator'
+import { User } from '@prisma/client'
 
 @Controller('auth')
 export class AuthController {
@@ -30,6 +32,12 @@ export class AuthController {
   async refreshToken(@Req() req: Request, @Res() res: Response) {
     const response = await this.authService.refreshToken(req, res)
     res.send(response)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('sign_out')
+  signOut(@CurrentUser() user: User, @Res() res: Response) {
+    this.authService.signOut(res, user.id)
   }
 
   @UseGuards(JwtAuthGuard)
