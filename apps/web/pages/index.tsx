@@ -22,7 +22,7 @@ export function Web() {
 
   const [_currUser, setCurrUser] = useAtom(setCurrUserAtom)
 
-  const { meFetching, isLoggedIn } = useAuth(router, setCurrUser)
+  const { meFetching, isLoggedIn } = useAuth(router, setCurrUser, true)
 
   const draw = {
     hidden: { pathLength: 0, opacity: 0 },

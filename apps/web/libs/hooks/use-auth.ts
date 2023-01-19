@@ -16,9 +16,12 @@ import { useMeQuery, User } from '../../generated/graphql'
 export const useAuth = (
   router: NextRouter,
   setCurrUser: (user: User | null) => void,
+  noCache: boolean = false,
 ) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const { data, loading, error } = useMeQuery()
+  const { data, loading, error } = useMeQuery({
+    fetchPolicy: noCache ? 'network-only' : 'cache-first',
+  })
 
   useEffect(() => {
     if (!loading) {

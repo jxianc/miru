@@ -138,6 +138,7 @@ type Mutation {
   quitEvent(eventId: String!): BaseResponse!
   removeAnnouncement(announcementId: Float!, eventId: String!): BaseResponse!
   removeEvent(eventId: String!): BaseResponse!
+  signOut: Boolean!
   signUpEvent(eventId: String!, formValueInputs: [FormValueInput!]!): BaseResponse!
   updateAnnouncement(eventId: String!, updateAnnouncementInput: UpdateAnnouncementInput!): UpdateAnnouncementResponse!
   updateEvent(eventId: String!, updateEventInput: UpdateEventInput!): UpdateEventResponse!

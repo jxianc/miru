@@ -4,6 +4,8 @@ import { setNavbarStatusAtom } from '../libs/atom/navbar.atom'
 import { useAtom } from 'jotai'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/router'
+import { removeAccessToken } from '../libs/accesstoken-operation'
+import { useSignOutMutation } from '../generated/graphql'
 
 interface NavbarProps {
   name: string
@@ -14,6 +16,9 @@ const Navbar: React.FC<NavbarProps> = ({ name, image }) => {
   const router = useRouter()
   const [navbarStatus, setNavbarStatus] = useAtom(setNavbarStatusAtom)
   const [showMenu, setShowMenu] = useState(false)
+
+  // graphql query
+  const [signOut, { data, loading, error }] = useSignOutMutation()
 
   useEffect(() => {
     switch (router.pathname) {
@@ -86,7 +91,17 @@ const Navbar: React.FC<NavbarProps> = ({ name, image }) => {
           Registered
         </div>
         {/* Sign out Button */}
-        <div className="p-2 px-4 text-white bg-red-600 rounded-lg cursor-pointer">
+        <div
+          className="p-2 px-4 text-white bg-red-600 rounded-lg cursor-pointer"
+          onClick={async () => {
+            // call sign out query, remove access token, redirect back to homepage
+            const res = await signOut()
+            if (res.data?.signOut) {
+              removeAccessToken()
+              router.push('/')
+            }
+          }}
+        >
           Sign Out
         </div>
         <Image

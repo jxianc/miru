@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common'
-import { Resolver, Query } from '@nestjs/graphql'
+import { Resolver, Query, Mutation, Context } from '@nestjs/graphql'
 import { AuthService } from './auth.service'
 import { User as UserEntity } from './entities/user.entity'
 import { JwtGqlAuthGuard } from './guards/jwt.guard'
@@ -19,5 +19,11 @@ export class AuthResolver {
   @Query(() => UserEntity)
   me(@CurrentUser() user: User) {
     return user
+  }
+
+  @UseGuards(JwtGqlAuthGuard)
+  @Mutation(() => Boolean)
+  signOut(@CurrentUser() user: User, @Context() ctx: any) {
+    return this.authService.signOut(ctx.res, user.id)
   }
 }

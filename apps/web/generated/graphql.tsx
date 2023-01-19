@@ -49,13 +49,6 @@ export type AnnouncementUpdated = {
   announcementAction: AnnouncementAction
 }
 
-export type AuthResponse = {
-  __typename?: 'AuthResponse'
-  accessToken?: Maybe<Scalars['String']>
-  errMsg?: Maybe<Scalars['String']>
-  success: Scalars['Boolean']
-}
-
 export type BaseResponse = {
   __typename?: 'BaseResponse'
   errMsg?: Maybe<Scalars['String']>
@@ -172,9 +165,9 @@ export type Mutation = {
   createAnnouncement: CreateAnnouncementResponse
   createEvent: CreateEventResponse
   quitEvent: BaseResponse
-  refreshToken: AuthResponse
   removeAnnouncement: BaseResponse
   removeEvent: BaseResponse
+  signOut: Scalars['Boolean']
   signUpEvent: BaseResponse
   updateAnnouncement: UpdateAnnouncementResponse
   updateEvent: UpdateEventResponse
@@ -409,17 +402,9 @@ export type CreateEventMutation = {
   }
 }
 
-export type RefreshTokenMutationVariables = Exact<{ [key: string]: never }>
+export type SignOutMutationVariables = Exact<{ [key: string]: never }>
 
-export type RefreshTokenMutation = {
-  __typename?: 'Mutation'
-  refreshToken: {
-    __typename?: 'AuthResponse'
-    accessToken?: string | null
-    errMsg?: string | null
-    success: boolean
-  }
-}
+export type SignOutMutation = { __typename?: 'Mutation'; signOut: boolean }
 
 export type GetEventsOrganizedQueryVariables = Exact<{ [key: string]: never }>
 
@@ -541,56 +526,49 @@ export type CreateEventMutationOptions = Apollo.BaseMutationOptions<
   CreateEventMutation,
   CreateEventMutationVariables
 >
-export const RefreshTokenDocument = gql`
-  mutation RefreshToken {
-    refreshToken {
-      accessToken
-      errMsg
-      success
-    }
+export const SignOutDocument = gql`
+  mutation SignOut {
+    signOut
   }
 `
-export type RefreshTokenMutationFn = Apollo.MutationFunction<
-  RefreshTokenMutation,
-  RefreshTokenMutationVariables
+export type SignOutMutationFn = Apollo.MutationFunction<
+  SignOutMutation,
+  SignOutMutationVariables
 >
 
 /**
- * __useRefreshTokenMutation__
+ * __useSignOutMutation__
  *
- * To run a mutation, you first call `useRefreshTokenMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRefreshTokenMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useSignOutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignOutMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [refreshTokenMutation, { data, loading, error }] = useRefreshTokenMutation({
+ * const [signOutMutation, { data, loading, error }] = useSignOutMutation({
  *   variables: {
  *   },
  * });
  */
-export function useRefreshTokenMutation(
+export function useSignOutMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    RefreshTokenMutation,
-    RefreshTokenMutationVariables
+    SignOutMutation,
+    SignOutMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<
-    RefreshTokenMutation,
-    RefreshTokenMutationVariables
-  >(RefreshTokenDocument, options)
+  return Apollo.useMutation<SignOutMutation, SignOutMutationVariables>(
+    SignOutDocument,
+    options,
+  )
 }
-export type RefreshTokenMutationHookResult = ReturnType<
-  typeof useRefreshTokenMutation
->
-export type RefreshTokenMutationResult =
-  Apollo.MutationResult<RefreshTokenMutation>
-export type RefreshTokenMutationOptions = Apollo.BaseMutationOptions<
-  RefreshTokenMutation,
-  RefreshTokenMutationVariables
+export type SignOutMutationHookResult = ReturnType<typeof useSignOutMutation>
+export type SignOutMutationResult = Apollo.MutationResult<SignOutMutation>
+export type SignOutMutationOptions = Apollo.BaseMutationOptions<
+  SignOutMutation,
+  SignOutMutationVariables
 >
 export const GetEventsOrganizedDocument = gql`
   query GetEventsOrganized {
