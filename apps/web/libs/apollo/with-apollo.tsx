@@ -257,11 +257,11 @@ const createApolloClient: InitApolloClient<any> = ({
         console.warn('Your refresh token is invalid. Try to relogin')
         console.error(err)
 
-        // call logout query here and remove access token
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign_out`, {
-          method: 'POST',
-          credentials: 'include',
-        })
+        // remove access token
+        // await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign_out`, {
+        //   method: 'POST',
+        //   credentials: 'include',
+        // })
         removeAccessToken()
 
         // TODO: redirect to homepage?
