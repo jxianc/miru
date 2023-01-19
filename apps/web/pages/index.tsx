@@ -40,15 +40,18 @@ export function Web() {
   }
 
   useEffect(() => {
-    // if (!meFetching && isLoggedIn) {
-    //   router.push('/create')
-    // }
+    if (!meFetching && isLoggedIn) {
+      router.push('/create')
+    }
   }, [meFetching, isLoggedIn])
 
   return (
     <>
       {meFetching ? (
         <div>loading...</div>
+      ) : isLoggedIn ? (
+        // redirecting to create page
+        <div>redirecting...</div>
       ) : (
         <div
           className={`relative flex flex-col items-center justify-around h-full gap-10 ${
