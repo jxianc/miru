@@ -7,6 +7,7 @@ import { EventBoard } from '../components/EventBoard'
 import { EventList } from '../components/EventList'
 import Navbar from '../components/Navbar'
 import { Event, useGetEventsOrganizedQuery } from '../generated/graphql'
+import { MainLayout } from '../layouts/MainLayout'
 import withApollo from '../libs/apollo/with-apollo'
 import { setCurrUserAtom } from '../libs/atom/current-user.atom'
 import { useAuth } from '../libs/hooks/use-auth'
@@ -50,7 +51,7 @@ const Registered: NextPage<RegisteredProps> = ({}) => {
       {meFetching ? (
         <div>loading...</div>
       ) : (
-        <div className="flex flex-col h-full px-5 py-5 pb-5 ">
+        <MainLayout>
           <Navbar
             name={currUser?.name || `user${currUser?.id}`}
             image={currUser?.image || undefined}
@@ -86,7 +87,7 @@ const Registered: NextPage<RegisteredProps> = ({}) => {
               )}
             </div>
           </div>
-        </div>
+        </MainLayout>
       )}
     </>
   )

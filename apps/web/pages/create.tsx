@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { AboutForm } from '../components/AboutForm'
 import Navbar from '../components/Navbar'
+import { MainLayout } from '../layouts/MainLayout'
 import withApollo from '../libs/apollo/with-apollo'
 import { setCurrUserAtom } from '../libs/atom/current-user.atom'
 import { navbarStatusAtom } from '../libs/atom/navbar.atom'
@@ -30,7 +31,7 @@ const Create: NextPage<CreateProps> = ({}) => {
       {meFetching ? (
         <div>loading...</div>
       ) : isLoggedIn ? (
-        <div>
+        <MainLayout>
           <Navbar
             name={currUser?.name || `user${currUser?.id}`}
             image={currUser?.image || undefined}
@@ -99,7 +100,7 @@ const Create: NextPage<CreateProps> = ({}) => {
           {createdEvent != null && (
             <AboutForm setCreatedEvent={setCreatedEvent} />
           )}
-        </div>
+        </MainLayout>
       ) : (
         <div>loading...</div>
       )}
