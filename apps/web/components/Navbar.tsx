@@ -58,7 +58,7 @@ const Navbar: React.FC<NavbarProps> = ({ name, image }) => {
             router.push('/create')
           }}
         >
-          Create Event
+          Create
         </div>
         <div
           className={` ${
@@ -71,7 +71,7 @@ const Navbar: React.FC<NavbarProps> = ({ name, image }) => {
             router.push('/manage')
           }}
         >
-          Manage My Event
+          Manage
         </div>
         <div
           className={` md:inline hover:cursor-pointer ${
@@ -83,7 +83,7 @@ const Navbar: React.FC<NavbarProps> = ({ name, image }) => {
             router.push('/registered')
           }}
         >
-          Registered Event
+          Registered
         </div>
         {/* Sign out Button */}
         <div className="p-2 px-4 text-white bg-red-600 rounded-lg cursor-pointer">
